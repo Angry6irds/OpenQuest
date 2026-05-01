@@ -37,6 +37,10 @@ function Dashboard({ jugador, setVistaActual }) {
           <h3>💰 Saldo Total</h3>
           <p className="amount">${saldo.toLocaleString()}</p>
         </div>
+        <div className="card monedas">
+          <h3>🪙 Monedas</h3>
+          <p className="amount">{jugador.moneda}</p>
+        </div>
         <div className="card ahorro">
           <h3>🏦 Ahorro</h3>
           <p className="amount">${ahorroTotal.toLocaleString()}</p>

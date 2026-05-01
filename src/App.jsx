@@ -5,24 +5,37 @@ import Cuentas from './components/Cuentas'
 import Ahorro from './components/Ahorro'
 import Inversion from './components/Inversion'
 import Tienda from './components/Tienda'
-import { usePersistencia } from './hooks/usePersistencia'
+import MiniJuegos from './components/MiniJuegos'
+import Login from './components/Login'
+import Registro from './components/Registro'
+import { usePersistencia, obtenerSesion, cerrarSesion } from './hooks/usePersistencia'
 import { NIVELES_MISIONES, INSIGNIAS, MEJORAS } from './data/misiones'
 import './App.css'
 
 function App() {
   const [vistaActual, setVistaActual] = useState('dashboard')
+  const [vistaAutenticacion, setVistaAutenticacion] = useState(null)
   const {
     estado,
     actualizarJugador,
     actualizarFinanzas,
     actualizarMisiones,
     agregarMejora,
-    gastarMonedas
+    gastarMonedas,
+    agregarMonedas
   } = usePersistencia()
 
   const [notificaciones, setNotificaciones] = useState([])
 
-  // Verificar insignias al cambiar estado
+  useEffect(() => {
+    const sesion = obtenerSesion()
+    if (sesion) {
+      setVistaAutenticacion(null)
+    } else {
+      setVistaAutenticacion('login')
+    }
+  }, [])
+
   useEffect(() => {
     verificarInsignias()
   }, [estado.jugador.nivel, estado.misiones.misionesCompletadas, estado.finanzas])
@@ -63,7 +76,6 @@ function App() {
   }
 
   const agregarXP = (cantidad) => {
-    // Aplicar XP boost si está activo
     const xpBoost = estado.mejoras?.find(m => m.id === 'xp_boost' && m.activo)
     const cantidadFinal = xpBoost ? Math.floor(cantidad * 1.25) : cantidad
 
@@ -71,7 +83,6 @@ function App() {
       xp: estado.jugador.xp + cantidadFinal
     })
 
-    // Verificar subida de nivel
     if (estado.jugador.xp + cantidadFinal >= estado.jugador.xpParaSiguienteNivel) {
       const nuevoNivel = estado.jugador.nivel + 1
       actualizarJugador({
@@ -100,7 +111,6 @@ function App() {
     const mision = NIVELES_MISIONES[nivelId].misiones.find(m => m.id === misionId)
     if (!mision || estado.misiones.misionesCompletadas?.includes(misionId)) return
 
-    // Verificar si se cumplió el requisito
     const finanzas = estado.finanzas
     let cumplio = false
 
@@ -132,14 +142,12 @@ function App() {
       return
     }
 
-    // Completar misión
     const nuevasCompletadas = [...(estado.misiones.misionesCompletadas || []), misionId]
     actualizarMisiones({ misionesCompletadas: nuevasCompletadas })
     agregarXP(mision.recompensaXP)
     actualizarJugador({ moneda: estado.jugador.moneda + mision.recompensaMonedas })
     agregarNotificacion(`✅ Misión completada: +${mision.recompensaXP} XP, +${mision.recompensaMonedas} 🪙`, 'exito')
 
-    // Verificar primera misión para insignia Pionero
     if (nuevasCompletadas.length === 1) {
       const pionero = INSIGNIAS.find(i => i.id === 'pionero')
       if (!estado.jugador.insignias?.find(i => i.id === 'pionero')) {
@@ -155,7 +163,6 @@ function App() {
       gastosTotales: estado.finanzas.gastosTotales + cantidad
     })
 
-    // Aplicar cashback si tiene la mejora
     const cashback = estado.mejoras?.find(m => m.id === 'cashback')
     if (cashback) {
       const cashbackAmount = Math.floor(cantidad * cashback.beneficio.cashback)
@@ -167,7 +174,6 @@ function App() {
   }
 
   const registrarDeposito = (cantidad) => {
-    // Aplicar ahorro automático si tiene la mejora
     const ahorroAuto = estado.mejoras?.find(m => m.id === 'ahorro_auto')
     const ahorroExtra = ahorroAuto ? Math.floor(cantidad * ahorroAuto.beneficio.ahorroAutomatico) : 0
 
@@ -176,11 +182,6 @@ function App() {
       ahorroTotal: estado.finanzas.ahorroTotal + ahorroExtra
     })
     agregarNotificacion(`💵 Depósito: $${cantidad}${ahorroExtra > 0 ? ` (+$${ahorroExtra} ahorrado)` : ''}`, 'exito')
-  }
-
-  const actualizarProgresoMision = (tipo, valor) => {
-    // Esta función se llama cuando hay cambios en finanzas para actualizar progreso
-    // El progreso se calcula dinámicamente en el componente Misiones
   }
 
   const comprarMejora = (mejoraId) => {
@@ -194,6 +195,13 @@ function App() {
     }
     agregarNotificacion('⚠️ No tienes suficientes monedas', 'error')
     return false
+  }
+
+  const handleLogout = () => {
+    cerrarSesion()
+    setVistaAutenticacion('login')
+    setVistaActual('dashboard')
+    agregarNotificacion('👋 Sesión cerrada', 'info')
   }
 
   const jugador = {
@@ -235,9 +243,34 @@ function App() {
             gastarMonedas={gastarMonedas}
           />
         )
+      case 'minijuegos':
+        return (
+          <MiniJuegos
+            jugador={jugador}
+            agregarMonedas={agregarMonedas}
+          />
+        )
       default:
         return <Dashboard jugador={jugador} setVistaActual={setVistaActual} />
     }
+  }
+
+  if (vistaAutenticacion === 'login') {
+    return (
+      <Login
+        onLoginExitoso={() => setVistaAutenticacion(null)}
+        onIrRegistro={() => setVistaAutenticacion('registro')}
+      />
+    )
+  }
+
+  if (vistaAutenticacion === 'registro') {
+    return (
+      <Registro
+        onRegistroExitoso={() => setVistaAutenticacion(null)}
+        onVolverLogin={() => setVistaAutenticacion('login')}
+      />
+    )
   }
 
   return (
@@ -276,6 +309,12 @@ function App() {
             📈 Inversión
           </button>
           <button
+            className={`nav-btn ${vistaActual === 'minijuegos' ? 'activa' : ''}`}
+            onClick={() => setVistaActual('minijuegos')}
+          >
+            🎮 Minijuegos
+          </button>
+          <button
             className={`nav-btn ${vistaActual === 'tienda' ? 'activa' : ''}`}
             onClick={() => setVistaActual('tienda')}
           >
@@ -285,10 +324,12 @@ function App() {
         <div className="player-info">
           <span className="level">Nvl {jugador.nivel}</span>
           <span className="coins">🪙 {jugador.moneda}</span>
+          <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
+            🚪
+          </button>
         </div>
       </nav>
 
-      {/* Notificaciones */}
       <div className="notificaciones">
         {notificaciones.map(notif => (
           <div key={notif.id} className={`notificacion ${notif.tipo}`}>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 
 const CLAVE_GUARDADO = 'openquest_guardado_v1'
+const CLAVE_USUARIOS = 'openquest_usuarios'
+const CLAVE_SESION = 'openquest_sesion_actual'
 
 const estadoInicial = {
   jugador: {
@@ -8,25 +10,103 @@ const estadoInicial = {
     nivel: 1,
     xp: 0,
     xpParaSiguienteNivel: 100,
-    moneda: 100,
+    moneda: 0,
     racha: 0,
     insignias: [],
     perfil: 'moderado'
   },
   finanzas: {
-    saldo: 1000,
-    ahorroTotal: 500,
+    saldo: 200,
+    ahorroTotal: 0,
     inversionTotal: 0,
     gastosTotales: 0,
-    ahorrosEnApartados: 500
+    ahorrosEnApartados: 0
   },
   misiones: {
     nivelDesbloqueado: 1,
     misionesCompletadas: [],
-    misionesActivas: [1, 2, 3] // IDs de misiones disponibles
+    misionesActivas: [1, 2, 3]
   },
   mejoras: [],
   ultimoAcceso: null
+}
+
+function hashSimple(str) {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash |= 0
+  }
+  return hash.toString(36)
+}
+
+function obtenerUsuarios() {
+  try {
+    const data = localStorage.getItem(CLAVE_USUARIOS)
+    return data ? JSON.parse(data) : []
+  } catch {
+    return []
+  }
+}
+
+function guardarUsuarios(usuarios) {
+  localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios))
+}
+
+export function registrarUsuario(nombre, password, umamusume) {
+  const usuarios = obtenerUsuarios()
+  const username = nombre.trim().replace(/\s+/g, '') + '_' + (umamusume || 'Torena')
+
+  if (usuarios.find(u => u.username === username)) {
+    return { error: 'Este nombre de usuario ya existe. Intenta con otro nombre.' }
+  }
+
+  const nuevoUsuario = {
+    username,
+    passwordHash: hashSimple(password),
+    nombre,
+    umamusume: umamusume || 'Torena',
+    createdAt: new Date().toISOString()
+  }
+
+  usuarios.push(nuevoUsuario)
+  guardarUsuarios(usuarios)
+  return { success: true, username }
+}
+
+export function iniciarSesion(username, password) {
+  const usuarios = obtenerUsuarios()
+  const usuario = usuarios.find(u => u.username === username)
+
+  if (!usuario) {
+    return { error: 'Usuario no encontrado.' }
+  }
+
+  if (usuario.passwordHash !== hashSimple(password)) {
+    return { error: 'Contraseña incorrecta.' }
+  }
+
+  localStorage.setItem(CLAVE_SESION, JSON.stringify({ username, nombre: usuario.nombre }))
+  return { success: true, usuario }
+}
+
+export function cerrarSesion() {
+  localStorage.removeItem(CLAVE_SESION)
+  localStorage.removeItem(CLAVE_GUARDADO)
+}
+
+export function obtenerSesion() {
+  try {
+    const data = localStorage.getItem(CLAVE_SESION)
+    return data ? JSON.parse(data) : null
+  } catch {
+    return null
+  }
+}
+
+export function hayUsuariosRegistrados() {
+  return obtenerUsuarios().length > 0
 }
 
 export function usePersistencia() {
@@ -34,12 +114,22 @@ export function usePersistencia() {
     try {
       const guardado = localStorage.getItem(CLAVE_GUARDADO)
       if (guardado) {
-        return JSON.parse(guardado)
+        const parsed = JSON.parse(guardado)
+        const sesion = obtenerSesion()
+        if (sesion) {
+          parsed.jugador.nombre = sesion.nombre
+        }
+        return parsed
       }
     } catch (e) {
       console.error('Error al cargar guardado:', e)
     }
-    return estadoInicial
+    const inicial = { ...estadoInicial }
+    const sesion = obtenerSesion()
+    if (sesion) {
+      inicial.jugador.nombre = sesion.nombre
+    }
+    return inicial
   })
 
   useEffect(() => {
@@ -86,6 +176,10 @@ export function usePersistencia() {
     return false
   }
 
+  const agregarMonedas = (cantidad) => {
+    actualizarJugador({ moneda: estado.jugador.moneda + cantidad })
+  }
+
   const resetearProgreso = () => {
     localStorage.removeItem(CLAVE_GUARDADO)
     setEstado(estadoInicial)
@@ -98,6 +192,7 @@ export function usePersistencia() {
     actualizarMisiones,
     agregarMejora,
     gastarMonedas,
+    agregarMonedas,
     resetearProgreso
   }
 }

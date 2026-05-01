@@ -1524,3 +1524,571 @@
   color: var(--text-secondary);
   font-size: 0.85rem;
 }
+
+/* ==========================================
+   AUTENTICACIÓN (Login / Registro)
+   ========================================== */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at top, var(--bg-card), var(--bg-dark));
+  padding: 2rem;
+}
+
+.auth-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--xp-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+.form-help {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.auth-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.auth-btn {
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.auth-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.auth-footer p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.auth-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.auth-link:hover {
+  color: var(--primary-dark);
+}
+
+.first-user-message {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
+  border: 2px solid var(--success);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.first-user-message p {
+  margin: 0.25rem 0;
+}
+
+.first-user-message p:first-child {
+  font-weight: bold;
+  color: var(--success);
+  font-size: 1.1rem;
+}
+
+.first-user-message p:last-child {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ==========================================
+   DASHBOARD - Tarjeta de Monedas Mejorada
+   ========================================== */
+.card.monedas {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+  border: 2px solid var(--coin-color);
+}
+
+.card.monedas .amount {
+  color: var(--coin-color);
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+/* Navbar - Contador de monedas más visible */
+.navbar .coins {
+  font-size: 1rem;
+  padding: 0.4rem 1rem;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+}
+
+/* Botón de Logout */
+.logout-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.4);
+  transform: scale(1.1);
+}
+
+/* ==========================================
+   MINIJUEGOS
+   ========================================== */
+.minijuegos-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.juegos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.juego-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.juego-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.juego-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.juego-card p {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.recompensa-info {
+  color: var(--coin-color);
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.jugar-btn {
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jugar-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Quiz Financiero */
+.quiz-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.volver-btn-small {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.volver-btn-small:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.quiz-progreso {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.quiz-pregunta h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.quiz-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quiz-opcion {
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.quiz-opcion:hover:not(.correcta):not(.incorrecta) {
+  border-color: var(--primary);
+  background: var(--bg-hover);
+}
+
+.quiz-opcion.correcta {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.quiz-opcion.incorrecta {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+}
+
+/* Memory de Monedas */
+.memory-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.memory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.memory-stats {
+  display: flex;
+  gap: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.memory-card {
+  aspect-ratio: 1;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--xp-color));
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.memory-card:hover:not(.volteada) {
+  transform: scale(1.05);
+}
+
+.memory-card.volteada {
+  background: var(--bg-dark);
+  border-color: var(--coin-color);
+}
+
+/* Presupuesto Challenge */
+.presupuesto-start {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.presupuesto-start h2 {
+  margin-bottom: 1rem;
+}
+
+.presupuesto-start p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.presupuesto-reglas {
+  text-align: left;
+  background: var(--bg-dark);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  list-style: none;
+}
+
+.presupuesto-reglas li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.presupuesto-reglas li:last-child {
+  border-bottom: none;
+}
+
+.presupuesto-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.presupuesto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.presupuesto-stats {
+  display: flex;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.presupuesto-stats .tiempo {
+  font-weight: bold;
+}
+
+.presupuesto-stats .tiempo.peligro {
+  color: var(--danger);
+  animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.presupuesto-gasto {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border: 2px solid var(--border);
+}
+
+.presupuesto-gasto h3 {
+  font-size: 1.5rem;
+}
+
+.presupuesto-opciones {
+  display: flex;
+  gap: 1rem;
+}
+
+.presupuesto-btn {
+  flex: 1;
+  padding: 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.presupuesto-btn.necesidad {
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
+}
+
+.presupuesto-btn.deseo {
+  background: linear-gradient(135deg, var(--warning), #d97706);
+  color: var(--bg-dark);
+}
+
+.presupuesto-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Resultados de Minijuegos */
+.resultado-card {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--bg-card);
+  padding: 2.5rem;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+}
+
+.resultado-card.quiz {
+  border-color: var(--primary);
+}
+
+.resultado-card.memory {
+  border-color: var(--coin-color);
+}
+
+.resultado-card.presupuesto {
+  border-color: var(--success);
+}
+
+.resultado-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.resultado-texto {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.recompensa-ganada {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--coin-color);
+  margin: 1.5rem 0;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+.resultado-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.volver-btn {
+  padding: 0.875rem 1.5rem;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.volver-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
