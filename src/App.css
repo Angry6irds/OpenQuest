@@ -1524,3 +1524,279 @@
   color: var(--text-secondary);
   font-size: 0.85rem;
 }
+
+/* Personaje Panel */
+.personaje-panel {
+  position: relative;
+}
+
+.personaje-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 25px;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.personaje-toggle:hover {
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.personaje-toggle svg {
+  width: 40px;
+  height: 40px;
+}
+
+.personaje-level {
+  background: var(--xp-color);
+  color: white;
+  padding: 0.1rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.personaje-modal {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 320px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.personaje-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.personaje-header h3 {
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: var(--text-primary);
+}
+
+.personaje-display {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 8px;
+}
+
+.personaje-display svg {
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 0 8px rgba(255,200,0,0.3));
+}
+
+.personaje-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: var(--bg-dark);
+  border-radius: 8px;
+}
+
+.personaje-stats .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.personaje-stats .stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.personaje-stats .stat-value {
+  font-weight: bold;
+  color: var(--xp-color);
+}
+
+.equipment-section h4 {
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.arma-card {
+  background: var(--bg-dark);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid;
+  margin-bottom: 1rem;
+}
+
+.arma-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.arma-nombre {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.arma-dano {
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
+.arma-rarity {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.arma-requiere {
+  font-size: 0.75rem;
+  color: var(--warning);
+}
+
+.evolucion-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.arma-card.siguiente {
+  opacity: 0.7;
+}
+
+.bloqueado {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.evolucionar-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, var(--xp-color), var(--primary));
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-top: 0.5rem;
+}
+
+.evolucionar-btn:hover {
+  transform: scale(1.02);
+}
+
+.arma-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Modal de Pregunta */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.pregunta-modal {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 2px solid var(--primary);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.pregunta-modal h3 {
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.pregunta-texto {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.pregunta-opciones {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.opcion-btn {
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 2px solid var(--border);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.opcion-btn:hover {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+.respuesta-error {
+  color: var(--danger);
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.cancelar-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.cancelar-btn:hover {
+  color: var(--text-primary);
+}

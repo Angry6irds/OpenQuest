@@ -7,18 +7,28 @@ const estadoInicial = {
     nombre: 'Explorador',
     nivel: 1,
     xp: 0,
-    xpParaSiguienteNivel: 100,
+    xpParaSiguienteNivel: 50,
     moneda: 100,
     racha: 0,
     insignias: [],
-    perfil: 'moderado'
+    perfil: 'moderado',
+    equipo: {
+      arma: 'palo_madera',
+      armadura: 'tunica_rota',
+      accesorio: null
+    },
+    apariencia: {
+      piel: '#f5c6a1',
+      cabello: '#4a3728',
+      ropa: '#8b7355'
+    }
   },
   finanzas: {
-    saldo: 1000,
-    ahorroTotal: 500,
+    saldo: 50,
+    ahorroTotal: 0,
     inversionTotal: 0,
     gastosTotales: 0,
-    ahorrosEnApartados: 500
+    ahorrosEnApartados: 0
   },
   misiones: {
     nivelDesbloqueado: 1,
@@ -34,7 +44,22 @@ export function usePersistencia() {
     try {
       const guardado = localStorage.getItem(CLAVE_GUARDADO)
       if (guardado) {
-        return JSON.parse(guardado)
+        const parsed = JSON.parse(guardado)
+        if (!parsed.jugador.equipo) {
+          parsed.jugador.equipo = {
+            arma: 'palo_madera',
+            armadura: 'tunica_rota',
+            accesorio: null
+          }
+        }
+        if (!parsed.jugador.apariencia) {
+          parsed.jugador.apariencia = {
+            piel: '#f5c6a1',
+            cabello: '#4a3728',
+            ropa: '#8b7355'
+          }
+        }
+        return parsed
       }
     } catch (e) {
       console.error('Error al cargar guardado:', e)

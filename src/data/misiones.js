@@ -1,264 +1,268 @@
 export const NIVELES_MISIONES = {
   1: {
     titulo: '🌟 Nivel Principiante',
-    descripcion: 'Tus primeros pasos en el mundo financiero',
+    descripcion: 'Aprende los basics de OpenBank',
+    xpParaDesbloquear: 50,
     misiones: [
       {
         id: 1,
-        titulo: '🎯 Armar mi fondo de emergencia',
-        descripcion: 'Tu primer paso hacia la libertad financiera. Ahorrá $100 en tu fondo de emergencia.',
-        recompensaXP: 100,
-        recompensaMonedas: 25,
-        categoria: 'ahorro',
-        dificultad: 'principiante',
-        requisito: { tipo: 'ahorro', cantidad: 100 },
-        progreso: { actual: 0, meta: 100 },
-        completada: false
+        titulo: 'Primera Encuesta',
+        descripcion: 'Responde 5 preguntas sobre OpenBank',
+        recompensaXP: 30,
+        recompensaMonedas: 10,
+        categoria: 'educacion',
+        dificultad: 'facil',
+        requisito: { tipo: 'encuesta', cantidad: 1 }
       },
       {
         id: 2,
-        titulo: '📚 Aprender sobre interés compuesto',
-        descripcion: 'Completá el minijuego educativo sobre la bola de nieve financiera.',
-        recompensaXP: 50,
-        recompensaMonedas: 10,
-        categoria: 'educacion',
-        dificultad: 'principiante',
-        requisito: { tipo: 'minijuego', minijuego: 'interes_compuesto' },
-        progreso: { actual: 0, meta: 1 },
-        completada: false
+        titulo: 'Referir Amigo',
+        descripcion: 'Invita a un amigo a usar OpenBank',
+        recompensaXP: 25,
+        recompensaMonedas: 8,
+        categoria: 'referido',
+        dificultad: 'facil',
+        requisito: { tipo: 'referido', cantidad: 1 }
       },
       {
         id: 3,
-        titulo: '💳 Configurar mi primera tarjeta',
-        descripcion: 'Activa tu tarjeta virtual y hacé tu primera compra segura.',
-        recompensaXP: 75,
-        recompensaMonedas: 15,
-        categoria: 'cuentas',
-        dificultad: 'principiante',
-        requisito: { tipo: 'gasto', cantidad: 50 },
-        progreso: { actual: 0, meta: 50 },
-        completada: false
+        titulo: 'Ver Tutorial',
+        descripcion: 'Aprende a usar la app',
+        recompensaXP: 20,
+        recompensaMonedas: 5,
+        categoria: 'educacion',
+        dificultad: 'facil',
+        requisito: { tipo: 'tutorial', cantidad: 1 }
       },
       {
         id: 4,
-        titulo: '💰 Primer depósito',
-        descripcion: 'Realizá tu primer depósito de al menos $200 en tu cuenta.',
-        recompensaXP: 60,
+        titulo: 'Ahorro Inicial',
+        descripcion: 'Ahorra tus primeros $25',
+        recompensaXP: 35,
         recompensaMonedas: 12,
         categoria: 'ahorro',
-        dificultad: 'principiante',
-        requisito: { tipo: 'deposito', cantidad: 200 },
-        progreso: { actual: 0, meta: 200 },
-        completada: false
+        dificultad: 'facil',
+        requisito: { tipo: 'ahorro', cantidad: 25 }
       }
-    ],
-    requisitoDesbloqueo: { nivel: 1 }
+    ]
   },
   2: {
-    titulo: '⚔️ Nivel Aventurero',
-    descripcion: 'Comenzás a dominar las finanzas',
+    titulo: '🏃 Nivel Corredor',
+    descripcion: 'Conviertete en un ahorrador activo',
+    xpParaDesbloquear: 150,
     misiones: [
       {
         id: 5,
-        titulo: '🎯 Establecer una meta de ahorro',
-        descripcion: 'Creá un apartado con un objetivo claro de $1000.',
-        recompensaXP: 150,
-        recompensaMonedas: 30,
-        categoria: 'ahorro',
-        dificultad: 'intermedio',
-        requisito: { tipo: 'apartado', cantidad: 1000 },
-        progreso: { actual: 0, meta: 1000 },
-        completada: false
+        titulo: 'Umamusume: Crea tu cuenta',
+        descripcion: 'Registrate en OpenBank y obten tu tarjeta virtual',
+        recompensaXP: 50,
+        recompensaMonedas: 15,
+        categoria: 'cuenta',
+        dificultad: 'facil',
+        requisito: { tipo: 'crearCuenta', cantidad: 1 }
       },
       {
         id: 6,
-        titulo: '🛒 Controlar gastos hormiga',
-        descripcion: 'Reducí tus gastos hormiga a menos de $50 en una semana.',
-        recompensaXP: 100,
+        titulo: 'Meta de Ahorro',
+        descripcion: 'Alcanza $100 en ahorro',
+        recompensaXP: 60,
         recompensaMonedas: 20,
-        categoria: 'gastos',
-        dificultad: 'intermedio',
-        requisito: { tipo: 'gastoHormiga', maximo: 50 },
-        progreso: { actual: 0, meta: 50 },
-        completada: false
+        categoria: 'ahorro',
+        dificultad: 'medio',
+        requisito: { tipo: 'ahorro', cantidad: 100 }
       },
       {
         id: 7,
-        titulo: '📊 Descubrir mi perfil de inversor',
-        descripcion: 'Completá el test y descubrí si sos conservador, moderado o agresivo.',
-        recompensaXP: 80,
-        recompensaMonedas: 20,
-        categoria: 'inversion',
-        dificultad: 'intermedio',
-        requisito: { tipo: 'test', test: 'perfil_inversor' },
-        progreso: { actual: 0, meta: 1 },
-        completada: false
+        titulo: 'Trivia Umamusume',
+        descripcion: 'Responde correctamente 3 preguntas sobre caballos de carreras',
+        recompensaXP: 45,
+        recompensaMonedas: 12,
+        categoria: 'educacion',
+        dificultad: 'medio',
+        requisito: { tipo: 'trivia', cantidad: 3 }
       },
       {
         id: 8,
-        titulo: '💵 Ahorro automático',
-        descripcion: 'Activá el redondeo automático de compras.',
-        recompensaXP: 70,
-        recompensaMonedas: 15,
-        categoria: 'ahorro',
-        dificultad: 'intermedio',
-        requisito: { tipo: 'activar', feature: 'redondeo' },
-        progreso: { actual: 0, meta: 1 },
-        completada: false
+        titulo: 'PrimerDeposito',
+        descripcion: 'Deposita $50 en tu cuenta',
+        recompensaXP: 40,
+        recompensaMonedas: 10,
+        categoria: 'deposito',
+        dificultad: 'facil',
+        requisito: { tipo: 'deposito', cantidad: 50 }
       }
-    ],
-    requisitoDesbloqueo: { misionesCompletadas: 3, nivel: 1 }
+    ]
   },
   3: {
-    titulo: '🏆 Nivel Experto',
-    descripcion: 'Las ligas mayores te esperan',
+    titulo: '🐴 Nivel Jockey',
+    descripcion: 'Domina las finanzas como un jockey',
+    xpParaDesbloquear: 400,
     misiones: [
       {
         id: 9,
-        titulo: '📈 Primera inversión',
-        descripcion: 'Invertí al menos $100 en un ETF o Robo-advisor.',
-        recompensaXP: 200,
-        recompensaMonedas: 50,
-        categoria: 'inversion',
-        dificultad: 'avanzado',
-        requisito: { tipo: 'inversion', cantidad: 100 },
-        progreso: { actual: 0, meta: 100 },
-        completada: false
+        titulo: 'Fondo de Emergencia',
+        descripcion: 'Ahorra $500 para emergencias',
+        recompensaXP: 100,
+        recompensaMonedas: 30,
+        categoria: 'ahorro',
+        dificultad: 'medio',
+        requisito: { tipo: 'ahorro', cantidad: 500 }
       },
       {
         id: 10,
-        titulo: '🛡️ Fondo de emergencia completo',
-        descripcion: 'Alcanzá $3000 en tu fondo de emergencia (3 meses de gastos).',
-        recompensaXP: 300,
-        recompensaMonedas: 75,
-        categoria: 'ahorro',
-        dificultad: 'avanzado',
-        requisito: { tipo: 'ahorro', cantidad: 3000 },
-        progreso: { actual: 0, meta: 3000 },
-        completada: false
+        titulo: 'Umamusume: Apostar Sabio',
+        descripcion: 'Conoce los tipos de apuestas en carreras',
+        recompensaXP: 80,
+        recompensaMonedas: 25,
+        categoria: 'educacion',
+        dificultad: 'medio',
+        requisito: { tipo: 'trivia', cantidad: 5 }
       },
       {
         id: 11,
-        titulo: '🎮 Completar todos los minijuegos',
-        descripcion: 'Dominá los 5 minijuegos educativos.',
-        recompensaXP: 150,
-        recompensaMonedas: 40,
-        categoria: 'educacion',
-        dificultad: 'avanzado',
-        requisito: { tipo: 'minijuego', minijuego: 'todos', cantidad: 5 },
-        progreso: { actual: 0, meta: 5 },
-        completada: false
+        titulo: 'Multiples Referidos',
+        descripcion: 'Referi a 3 amigos',
+        recompensaXP: 90,
+        recompensaMonedas: 28,
+        categoria: 'referido',
+        dificultad: 'medio',
+        requisito: { tipo: 'referido', cantidad: 3 }
       },
       {
         id: 12,
-        titulo: '💎 Diversificación maestra',
-        descripcion: 'Tené inversiones en al menos 3 productos diferentes.',
-        recompensaXP: 250,
-        recompensaMonedas: 60,
-        categoria: 'inversion',
-        dificultad: 'avanzado',
-        requisito: { tipo: 'diversificacion', cantidad: 3 },
-        progreso: { actual: 0, meta: 3 },
-        completada: false
+        titulo: 'Gastos Controlados',
+        descripcion: 'Mantene tus gastos debajo de $100',
+        recompensaXP: 70,
+        recompensaMonedas: 20,
+        categoria: 'control',
+        dificultad: 'medio',
+        requisito: { tipo: 'controlGastos', cantidad: 100 }
       }
-    ],
-    requisitoDesbloqueo: { misionesCompletadas: 6, nivel: 2 }
+    ]
   },
   4: {
-    titulo: '👑 Nivel Leyenda',
-    descripcion: 'Maestro de las finanzas',
+    titulo: '🏇 Nivel Montador',
+    descripcion: 'Es hora de invertir',
+    xpParaDesbloquear: 1000,
     misiones: [
       {
         id: 13,
-        titulo: '🏦 Independencia financiera',
-        descripcion: 'Alcanzá $10,000 en patrimonio total (ahorro + inversión).',
-        recompensaXP: 500,
-        recompensaMonedas: 150,
-        categoria: 'ahorro',
-        dificultad: 'experto',
-        requisito: { tipo: 'patrimonio', cantidad: 10000 },
-        progreso: { actual: 0, meta: 10000 },
-        completada: false
+        titulo: 'Primera Inversion',
+        descripcion: 'Invierte $100 en un fondo',
+        recompensaXP: 150,
+        recompensaMonedas: 40,
+        categoria: 'inversion',
+        dificultad: 'dificil',
+        requisito: { tipo: 'inversion', cantidad: 100 }
       },
       {
         id: 14,
-        titulo: '🔥 Racha de 30 días',
-        descripcion: 'Mantené una racha de 30 días consecutivos de ahorro.',
-        recompensaXP: 400,
-        recompensaMonedas: 100,
-        categoria: 'racha',
-        dificultad: 'experto',
-        requisito: { tipo: 'racha', dias: 30 },
-        progreso: { actual: 0, meta: 30 },
-        completada: false
+        titulo: 'Diversificacion',
+        descripcion: 'Abre 2 cuentas distintas',
+        recompensaXP: 120,
+        recompensaMonedas: 35,
+        categoria: 'cuenta',
+        dificultad: 'dificil',
+        requisito: { tipo: 'multiplesCuentas', cantidad: 2 }
       },
       {
         id: 15,
-        titulo: '🎓 Mentor financiero',
-        descripcion: 'Completá todas las misiones de niveles anteriores.',
-        recompensaXP: 600,
-        recompensaMonedas: 200,
-        categoria: 'logro',
-        dificultad: 'experto',
-        requisito: { tipo: 'todasMisiones', cantidad: 12 },
-        progreso: { actual: 0, meta: 12 },
-        completada: false
+        titulo: 'Umamusume: Master',
+        descripcion: 'Responde 7 preguntas sobre Umamusume',
+        recompensaXP: 130,
+        recompensaMonedas: 38,
+        categoria: 'educacion',
+        dificultad: 'dificil',
+        requisito: { tipo: 'trivia', cantidad: 7 }
+      },
+      {
+        id: 16,
+        titulo: 'Ahorro Milagroso',
+        descripcion: 'Llega a $1000 en ahorro',
+        recompensaXP: 140,
+        recompensaMonedas: 42,
+        categoria: 'ahorro',
+        dificultad: 'dificil',
+        requisito: { tipo: 'ahorro', cantidad: 1000 }
       }
-    ],
-    requisitoDesbloqueo: { misionesCompletadas: 10, nivel: 3 }
+    ]
+  },
+  5: {
+    titulo: '👑 Nivel Champion',
+    descripcion: 'Conquista las inversiones',
+    xpParaDesbloquear: 2500,
+    misiones: [
+      {
+        id: 17,
+        titulo: 'Inversion Major',
+        descripcion: 'Invierte $500 en ETF',
+        recompensaXP: 200,
+        recompensaMonedas: 50,
+        categoria: 'inversion',
+        dificultad: 'muy_dificil',
+        requisito: { tipo: 'inversion', cantidad: 500 }
+      },
+      {
+        id: 18,
+        titulo: 'Racha de Ahorro',
+        descripcion: 'Ahorra por 7 dias consecutivos',
+        recompensaXP: 180,
+        recompensaMonedas: 45,
+        categoria: 'racha',
+        dificultad: 'muy_dificil',
+        requisito: { tipo: 'racha', cantidad: 7 }
+      },
+      {
+        id: 19,
+        titulo: 'Umamusume: Derby Winner',
+        descripcion: 'Completa el quiz avanzado de caballos',
+        recompensaXP: 220,
+        recompensaMonedas: 55,
+        categoria: 'educacion',
+        dificultad: 'muy_dificil',
+        requisito: { tipo: 'trivia', cantidad: 10 }
+      },
+      {
+        id: 20,
+        titulo: 'Patrimonio',
+        descripcion: 'Alcanza $2000 en patrimonio total',
+        recompensaXP: 250,
+        recompensaMonedas: 60,
+        categoria: 'patrimonio',
+        dificultad: 'extremo',
+        requisito: { tipo: 'patrimonio', cantidad: 2000 }
+      }
+    ]
   }
 }
 
+export const XP_PARA_SIGUIENTE_NIVEL = {
+  1: 50,
+  2: 100,
+  3: 250,
+  4: 600,
+  5: 1500,
+  6: 3500,
+  7: 8000,
+  8: 18000,
+  9: 40000,
+  10: 90000
+}
+
 export const INSIGNIAS = [
-  { id: 'pionero', nombre: '🏆 Pionero', descripcion: 'Completó su primera misión', requisito: { misionesCompletadas: 1 } },
-  { id: 'ahorrador', nombre: '💰 Ahorrador', descripcion: 'Ahorró $500 en fondo de emergencia', requisito: { ahorro: 500 } },
-  { id: 'inversor', nombre: '📈 Inversor', descripcion: 'Hizo su primera inversión', requisito: { inversion: 1 } },
-  { id: 'racha7', nombre: '🔥 Racha de 7 días', descripcion: 'Mantuvo 7 días consecutivos', requisito: { racha: 7 } },
-  { id: 'racha30', nombre: '🔥🔥 Racha de 30 días', descripcion: 'Mantuvo 30 días consecutivos', requisito: { racha: 30 } },
-  { id: 'maestro', nombre: '🎓 Maestro Financiero', descripcion: 'Completó todas las misiones', requisito: { misionesCompletadas: 15 } },
-  { id: 'millonario', nombre: '💎 Millonario', descripcion: 'Alcanzó $10,000 de patrimonio', requisito: { patrimonio: 10000 } }
+  { id: 'pionero', nombre: 'Pionero', descripcion: 'Completaste tu primera mision', requisito: 1 },
+  { id: 'primer_paso', nombre: 'Primer Paso', descripcion: 'Completaste nivel 1', requisito: 4 },
+  { id: 'ahorrador_100', nombre: 'Ahorrador 100', descripcion: 'Ahorraste $100', requisito: 100 },
+  { id: 'inversor', nombre: 'Inversor', descripcion: 'Hiciste tu primera inversion', requisito: 1 },
+  { id: 'referidor', nombre: 'Referidor', descripcion: 'Referiste 3 amigos', requisito: 3 },
+  { id: 'racha_7', nombre: 'Racha 7', descripcion: '7 dias de ahorro', requisito: 7 },
+  { id: 'champion', nombre: 'Champion', descripcion: 'Llegaste al nivel 5', requisito: 5 }
 ]
 
 export const MEJORAS = [
-  {
-    id: 'cashback',
-    nombre: '💳 Cashback Premium',
-    descripcion: 'Obtené 2% de cashback en todas tus compras',
-    costo: 200,
-    tipo: 'pasiva',
-    beneficio: { cashback: 0.02 }
-  },
-  {
-    id: 'rendimiento_plus',
-    nombre: '📈 Rendimiento Plus',
-    descripcion: '+2% de rendimiento en tu cuenta remunerada',
-    costo: 300,
-    tipo: 'pasiva',
-    beneficio: { rendimientoExtra: 0.02 }
-  },
-  {
-    id: 'ahorro_auto',
-    nombre: '🤖 Ahorro Automático',
-    descripcion: 'Ahorra 5% de cada depósito automáticamente',
-    costo: 150,
-    tipo: 'activa',
-    beneficio: { ahorroAutomatico: 0.05 }
-  },
-  {
-    id: 'xp_boost',
-    nombre: '⚡ XP Boost',
-    descripcion: '+25% de XP por todas las misiones (7 días)',
-    costo: 100,
-    tipo: 'temporal',
-    duracion: 7,
-    beneficio: { xpBoost: 0.25 }
-  },
-  {
-    id: 'seguro',
-    nombre: '🛡️ Seguro de Protección',
-    descripcion: 'Protege tu racha si fallas un día',
-    costo: 50,
-    tipo: 'consumible',
-    beneficio: { protegerRacha: true }
-  }
+  { id: 'cashback', nombre: 'Cashback Premium', descripcion: '2% de cashback en compras', costo: 150, tipo: 'pasiva', beneficio: { cashback: 0.02 } },
+  { id: 'ahorro_auto', nombre: 'Ahorro Automatico', descripcion: 'Ahorra 5% automatico', costo: 100, tipo: 'activa', beneficio: { ahorroAutomatico: 0.05 } },
+  { id: 'xp_boost', nombre: 'XP Boost', descripcion: '+25% XP por 7 dias', costo: 80, tipo: 'temporal', duracion: 7, beneficio: { xpBoost: 0.25 } },
+  { id: 'multiplicador', nombre: 'Multiplicador', descripcion: 'x2 ingresos de misiones', costo: 200, tipo: 'pasiva', beneficio: { multiplicador: 2 } },
+  { id: 'seguro', nombre: 'Seguro', descripcion: 'Protege tu racha una vez', costo: 50, tipo: 'consumible', beneficio: { protegerRacha: true } }
 ]
