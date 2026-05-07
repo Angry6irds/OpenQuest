@@ -3,6 +3,7 @@ export const NIVELES_MISIONES = {
     titulo: '🌟 Nivel Principiante',
     descripcion: 'Aprende los basics de OpenBank',
     xpParaDesbloquear: 50,
+    requisitoDesbloqueo: { nivel: 1, misionesCompletadas: 0 },
     misiones: [
       {
         id: 1,
@@ -50,6 +51,7 @@ export const NIVELES_MISIONES = {
     titulo: '🏃 Nivel Corredor',
     descripcion: 'Conviertete en un ahorrador activo',
     xpParaDesbloquear: 150,
+    requisitoDesbloqueo: { nivel: 2, misionesCompletadas: 4 },
     misiones: [
       {
         id: 5,
@@ -97,6 +99,7 @@ export const NIVELES_MISIONES = {
     titulo: '🐴 Nivel Jockey',
     descripcion: 'Domina las finanzas como un jockey',
     xpParaDesbloquear: 400,
+    requisitoDesbloqueo: { nivel: 3, misionesCompletadas: 8 },
     misiones: [
       {
         id: 9,
@@ -144,6 +147,7 @@ export const NIVELES_MISIONES = {
     titulo: '🏇 Nivel Montador',
     descripcion: 'Es hora de invertir',
     xpParaDesbloquear: 1000,
+    requisitoDesbloqueo: { nivel: 4, misionesCompletadas: 12 },
     misiones: [
       {
         id: 13,
@@ -191,6 +195,7 @@ export const NIVELES_MISIONES = {
     titulo: '👑 Nivel Champion',
     descripcion: 'Conquista las inversiones',
     xpParaDesbloquear: 2500,
+    requisitoDesbloqueo: { nivel: 5, MisionesCompletadas: 16 },
     misiones: [
       {
         id: 17,

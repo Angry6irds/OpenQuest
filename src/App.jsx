@@ -29,7 +29,7 @@ function App() {
   }, [estado.jugador.nivel, estado.misiones.misionesCompletadas, estado.finanzas])
 
   const agregarNotificacion = (mensaje, tipo = 'info') => {
-    const id = Date.now()
+    const id = Date.now() + Math.random()
     setNotificaciones(prev => [...prev, { id, mensaje, tipo }])
     setTimeout(() => {
       setNotificaciones(prev => prev.filter(n => n.id !== id))
@@ -219,13 +219,14 @@ function App() {
   const renderizarVista = () => {
     switch(vistaActual) {
       case 'dashboard':
-        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} />
+        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} actualizarFinanzas={actualizarFinanzas} nivelActual={estado.jugador.nivel} />
       case 'misiones':
         return (
           <Misiones
             jugador={jugador}
             niveles={NIVELES_MISIONES}
             completarMision={completarMision}
+            nivelActual={estado.jugador.nivel}
           />
         )
       case 'cuentas':
