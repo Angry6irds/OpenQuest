@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { registrarUsuario } from '../hooks/usePersistencia'
 
 const UMAMUSUME_OPTIONS = [
   { value: '', label: 'Ninguna / No tengo favorita' },
@@ -55,6 +54,7 @@ function Registro({ onRegistroExitoso, onVolverLogin }) {
 
     setLoading(true)
 
+    const { registrarUsuario } = await import('../hooks/usePersistencia')
     const resultado = registrarUsuario(formData.nombre, formData.password, formData.umamusume)
 
     setLoading(false)

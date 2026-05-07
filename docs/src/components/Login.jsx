@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { hayUsuariosRegistrados, iniciarSesion } from '../hooks/usePersistencia'
 
 function Login({ onLoginExitoso, onIrRegistro }) {
   const [formData, setFormData] = useState({
@@ -11,6 +10,7 @@ function Login({ onLoginExitoso, onIrRegistro }) {
   const [hayUsuarios, setHayUsuarios] = useState(false)
 
   useEffect(() => {
+    const { hayUsuariosRegistrados } = require('../hooks/usePersistencia')
     setHayUsuarios(hayUsuariosRegistrados())
   }, [])
 
@@ -27,6 +27,7 @@ function Login({ onLoginExitoso, onIrRegistro }) {
     setError('')
     setLoading(true)
 
+    const { iniciarSesion } = await import('../hooks/usePersistencia')
     const resultado = iniciarSesion(formData.username, formData.password)
 
     setLoading(false)

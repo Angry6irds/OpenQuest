@@ -5,11 +5,15 @@ import Cuentas from './components/Cuentas'
 import Ahorro from './components/Ahorro'
 import Inversion from './components/Inversion'
 import Tienda from './components/Tienda'
+<<<<<<< HEAD
 import MiniJuegos from './components/MiniJuegos'
 import Login from './components/Login'
 import Registro from './components/Registro'
+import { usePersistencia, obtenerSesion, cerrarSesion } from './hooks/usePersistencia'
+=======
 import PersonajePanel from './components/PersonajePanel'
-import { usePersistencia, obtenerSesion, cerrarSesion } from './hooks/usePersistencia.jsx'
+import { usePersistencia } from './hooks/usePersistencia'
+>>>>>>> origin/main
 import { NIVELES_MISIONES, INSIGNIAS, MEJORAS } from './data/misiones'
 import './App.css'
 
@@ -84,9 +88,13 @@ function App() {
       xp: estado.jugador.xp + cantidadFinal
     })
 
+<<<<<<< HEAD
+    if (estado.jugador.xp + cantidadFinal >= estado.jugador.xpParaSiguienteNivel) {
+=======
     const xpSiguienteNivel = Math.floor(50 * Math.pow(1.8, estado.jugador.nivel - 1))
     
     if (estado.jugador.xp + cantidadFinal >= xpSiguienteNivel) {
+>>>>>>> origin/main
       const nuevoNivel = estado.jugador.nivel + 1
       const xpRestante = estado.jugador.xp + cantidadFinal - xpSiguienteNivel
       actualizarJugador({
@@ -152,6 +160,7 @@ function App() {
     const nuevasCompletadas = [...(estado.misiones.misionesCompletadas || []), misionId]
     actualizarMisiones({ misionesCompletadas: nuevasCompletadas })
     
+    // Agregar saldo según el tipo de misión
     if (mision.requisito.tipo === 'completarEncuesta') {
       actualizarFinanzas({ saldo: estado.finanzas.saldo + 50 })
     } else if (mision.requisito.tipo === 'referido') {

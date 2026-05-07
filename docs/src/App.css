@@ -1525,6 +1525,7 @@
   font-size: 0.85rem;
 }
 
+<<<<<<< HEAD
 /* ==========================================
    AUTENTICACIÓN (Login / Registro)
    ========================================== */
@@ -2091,8 +2092,7 @@
 .volver-btn:hover {
   border-color: var(--primary);
   color: var(--primary);
-}
-
+=======
 /* Personaje Panel */
 .personaje-panel {
   position: relative;
@@ -2367,197 +2367,5 @@
 
 .cancelar-btn:hover {
   color: var(--text-primary);
-}
-
-/* Personaje Panel */
-.personaje-panel {
-  position: relative;
-}
-
-.personaje-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--bg-card);
-  border: 2px solid var(--border);
-  border-radius: 25px;
-  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.personaje-toggle:hover {
-  border-color: var(--primary);
-  transform: scale(1.05);
-}
-
-.personaje-toggle svg {
-  width: 40px;
-  height: 40px;
-}
-
-.personaje-level {
-  background: var(--xp-color);
-  color: white;
-  padding: 0.1rem 0.5rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: bold;
-}
-
-.personaje-modal {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 0.5rem;
-  width: 320px;
-  background: var(--bg-card);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  z-index: 1000;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-}
-
-.personaje-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.personaje-header h3 {
-  margin: 0;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  color: var(--text-primary);
-}
-
-.personaje-display {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-  border-radius: 8px;
-}
-
-.personaje-display svg {
-  width: 100px;
-  height: 100px;
-  filter: drop-shadow(0 0 8px rgba(255,200,0,0.3));
-}
-
-.personaje-stats {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem;
-  background: var(--bg-dark);
-  border-radius: 8px;
-}
-
-.personaje-stats .stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.personaje-stats .stat-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-.personaje-stats .stat-value {
-  font-weight: bold;
-  color: var(--xp-color);
-}
-
-.equipment-section h4 {
-  margin-bottom: 0.75rem;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-}
-
-.arma-card {
-  background: var(--bg-dark);
-  padding: 1rem;
-  border-radius: 8px;
-  border: 2px solid;
-  margin-bottom: 1rem;
-}
-
-.arma-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.arma-nombre {
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.arma-dano {
-  font-size: 0.85rem;
-  color: var(--danger);
-}
-
-.arma-rarity {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-}
-
-.arma-requiere {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  display: block;
-  margin-top: 0.25rem;
-}
-
-.evolucion-section {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.evolucionar-btn {
-  width: 100%;
-  padding: 0.5rem;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 0.5rem;
-  transition: transform 0.2s;
-}
-
-.evolucionar-btn:hover {
-  transform: scale(1.05);
-}
-
-.bloqueado {
-  display: block;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-}
-
-.arma-desc {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-style: italic;
+>>>>>>> origin/main
 }
