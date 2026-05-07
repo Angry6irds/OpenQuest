@@ -1,12 +1,37 @@
 import { useState } from 'react'
+import {
+  PREGUNTAS_TRIVIA_NIVEL2,
+  PREGUNTAS_TRIVIA_NIVEL3,
+  PREGUNTAS_TRIVIA_NIVEL4,
+  PREGUNTAS_TRIVIA_NIVEL5
+} from './Dashboard'
 
-function Misiones({ jugador, niveles, completarMision }) {
-  const [nivelSeleccionado, setNivelSeleccionado] = useState(1)
+function shuffleArray(array) {
+  const arr = [...array]
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
+function Misiones({ jugador, niveles, completarMision, nivelActual: nivelDelJugador }) {
+  const [nivelSeleccionado, setNivelSeleccionado] = useState(nivelDelJugador || 1)
   const [filtro, setFiltro] = useState('todas')
+  const [modalTrivia, setModalTrivia] = useState(null)
+  const [preguntasTrivia, setPreguntasTrivia] = useState([])
+  const [preguntaIdx, setPreguntaIdx] = useState(0)
+  const [respuestasCorrectas, setRespuestasCorrectas] = useState(0)
+  const [misionTriviaId, setMisionTriviaId] = useState(null)
 
-  const nivelActual = niveles[nivelSeleccionado]
+  const nivelActualData = niveles[nivelSeleccionado]
   const nivelSiguiente = niveles[nivelSeleccionado + 1]
   const misionesCompletadasTotal = jugador.misiones?.misionesCompletadas?.length || 0
+  const misionesDelNivelActual = nivelActualData?.misiones?.length || 0
+  const completasEnNivelActual = nivelActualData?.misiones?.filter(m => 
+    jugador.misiones?.misionesCompletadas?.includes(m.id)
+  ).length || 0
+  const nivelDesbloqueado = completasEnNivelActual >= misionesDelNivelActual && nivelSeleccionado < 5
 
   const puedeAccederNivel = (nivel) => {
     if (nivel === 1) return true
@@ -76,7 +101,7 @@ function Misiones({ jugador, niveles, completarMision }) {
     }
   }
 
-  const misionesFiltradas = nivelActual.misiones.filter(m => {
+  const misionesFiltradas = nivelActualData.misiones.filter(m => {
     if (filtro === 'todas') return true
     if (filtro === 'completadas') return jugador.misiones?.misionesCompletadas?.includes(m.id)
     if (filtro === 'pendientes') return !jugador.misiones?.misionesCompletadas?.includes(m.id)
@@ -86,6 +111,42 @@ function Misiones({ jugador, niveles, completarMision }) {
     }
     return m.categoria === filtro
   })
+
+  const abrirTrivia = (misionId, nivel) => {
+    let preguntas
+    const todasPreguntas = [
+      ...PREGUNTAS_TRIVIA_NIVEL2,
+      ...PREGUNTAS_TRIVIA_NIVEL3,
+      ...PREGUNTAS_TRIVIA_NIVEL4,
+      ...PREGUNTAS_TRIVIA_NIVEL5
+    ]
+    preguntas = shuffleArray(todasPreguntas).slice(0, 10)
+    setMisionTriviaId({ id: misionId, nivel })
+    setPreguntasTrivia(preguntas)
+    setPreguntaIdx(0)
+    setRespuestasCorrectas(0)
+    setModalTrivia('trivia')
+  }
+
+  const responderTrivia = (respuesta) => {
+    if (respuesta === preguntasTrivia[preguntaIdx].respuesta) {
+      setRespuestasCorrectas(r => r + 1)
+    }
+    if (preguntaIdx < preguntasTrivia.length - 1) {
+      setPreguntaIdx(p => p + 1)
+    } else {
+      const nivel = nivelSeleccionado
+      const totalPreguntas = preguntasTrivia.length
+      const minimasCorrectas = nivel === 1 ? 5 : 9
+      
+      if (respuestasCorrectas + (respuesta === preguntasTrivia[preguntaIdx].respuesta ? 1 : 0) >= minimasCorrectas) {
+        completarMision(misionTriviaId.id, nivel)
+      } else {
+        alert(`Necesitas al menos ${minimasCorrectas} correctas! Tenías ${respuestasCorrectas + (respuesta === preguntasTrivia[preguntaIdx].respuesta ? 1 : 0)} de ${totalPreguntas}`)
+      }
+      setTimeout(() => setModalTrivia(null), 1500)
+    }
+  }
 
   return (
     <div className="misiones">
@@ -99,25 +160,40 @@ function Misiones({ jugador, niveles, completarMision }) {
         {Object.values(niveles).map(nivel => {
           const accesible = puedeAccederNivel(nivel.requisitoDesbloqueo.nivel)
           const esEsteNivel = nivelSeleccionado === nivel.requisitoDesbloqueo.nivel
+          const tieneMisionesCompletas = nivel.requisitoDesbloqueo.nivel === nivelSeleccionado && 
+            nivel.misiones?.filter(m => jugador.misiones?.misionesCompletadas?.includes(m.id)).length >= nivel.misiones?.length
 
           return (
             <button
               key={nivel.requisitoDesbloqueo.nivel}
-              className={`nivel-btn ${esEsteNivel ? 'activo' : ''} ${!accesible ? 'bloqueado' : ''}`}
+              className={`nivel-btn ${esEsteNivel ? 'activo' : ''} ${!accesible ? 'bloqueado' : ''} ${tieneMisionesCompletas && nivel.requisitoDesbloqueo.nivel < 5 ? 'completado' : ''}`}
               onClick={() => accesible && setNivelSeleccionado(nivel.requisitoDesbloqueo.nivel)}
               disabled={!accesible}
             >
-              <span className="nivel-icono">{accesible ? '🔓' : '🔒'}</span>
+              <span className="nivel-icono">{!accesible ? '🔒' : tieneMisionesCompletas ? '✅' : '🔓'}</span>
               <span className="nivel-nombre">{nivel.titulo.split(' ')[2]}</span>
             </button>
           )
         })}
       </div>
 
+      {/* Botón para pasar al siguiente nivel */}
+      {nivelDesbloqueado && nivelSeleccionado < 5 && (
+        <div style={{ textAlign: 'center', margin: '1rem 0' }}>
+          <button 
+            className="action-btn"
+            style={{ background: 'var(--success)', fontSize: '1.1rem', padding: '1rem 2rem' }}
+            onClick={() => setNivelSeleccionado(nivel => nivel + 1)}
+          >
+            🎉 ¡Nivel {nivelSeleccionado + 1} unlocked! Click para continuar →
+          </button>
+        </div>
+      )}
+
       {/* Info del nivel */}
       <div className="nivel-info-card">
-        <h3>{nivelActual.titulo}</h3>
-        <p>{nivelActual.descripcion}</p>
+        <h3>{nivelActualData.titulo}</h3>
+        <p>{nivelActualData.descripcion}</p>
         {nivelSiguiente && (
           <p className="nivel-requisito">
             Para desbloquear el siguiente nivel: completá {nivelSiguiente.requisitoDesbloqueo.misionesCompletadas} misiones
@@ -199,7 +275,14 @@ function Misiones({ jugador, niveles, completarMision }) {
                   <span className="xp">✨ +{mision.recompensaXP} XP</span>
                   <span className="coins">🪙 +{mision.recompensaMonedas}</span>
                 </div>
-                {!completada ? (
+                {mision.requisito.tipo === 'trivia' && !completada ? (
+                  <button
+                    className="completar-btn habilitado"
+                    onClick={() => abrirTrivia(mision.id, nivelSeleccionado)}
+                  >
+                    🎯 Responder Trivia
+                  </button>
+                ) : !completada ? (
                   <button
                     className={`completar-btn ${puedeCompletar ? 'habilitado' : 'deshabilitado'}`}
                     onClick={() => puedeCompletar && completarMision(mision.id, nivelSeleccionado)}
@@ -234,6 +317,26 @@ function Misiones({ jugador, niveles, completarMision }) {
           Nivel actual: {jugador.nivel} | Siguiente nivel en: {Object.values(niveles)[jugador.nivel]?.requisitoDesbloqueo.misionesCompletadas - misionesCompletadasTotal || 0} misiones
         </p>
       </div>
+
+      {/* Modal de Trivia */}
+      {modalTrivia === 'trivia' && preguntasTrivia.length > 0 && (
+        <div className="modal-overlay">
+          <div className="pregunta-modal">
+            <h3>Trivia ({preguntaIdx + 1}/{preguntasTrivia.length})</h3>
+            <p className="pregunta-texto">{preguntasTrivia[preguntaIdx].pregunta}</p>
+            <div className="pregunta-opciones">
+              {preguntasTrivia[preguntaIdx].opciones.map(opcion => (
+                <button key={opcion} className="opcion-btn" onClick={() => responderTrivia(opcion)}>
+                  {opcion}
+                </button>
+              ))}
+            </div>
+            <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              Correctas: {respuestasCorrectas}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

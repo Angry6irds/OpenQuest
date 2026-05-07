@@ -5,10 +5,15 @@ import Cuentas from './components/Cuentas'
 import Ahorro from './components/Ahorro'
 import Inversion from './components/Inversion'
 import Tienda from './components/Tienda'
+<<<<<<< HEAD
 import MiniJuegos from './components/MiniJuegos'
 import Login from './components/Login'
 import Registro from './components/Registro'
 import { usePersistencia, obtenerSesion, cerrarSesion } from './hooks/usePersistencia'
+=======
+import PersonajePanel from './components/PersonajePanel'
+import { usePersistencia } from './hooks/usePersistencia'
+>>>>>>> origin/main
 import { NIVELES_MISIONES, INSIGNIAS, MEJORAS } from './data/misiones'
 import './App.css'
 
@@ -41,7 +46,7 @@ function App() {
   }, [estado.jugador.nivel, estado.misiones.misionesCompletadas, estado.finanzas])
 
   const agregarNotificacion = (mensaje, tipo = 'info') => {
-    const id = Date.now()
+    const id = Date.now() + Math.random()
     setNotificaciones(prev => [...prev, { id, mensaje, tipo }])
     setTimeout(() => {
       setNotificaciones(prev => prev.filter(n => n.id !== id))
@@ -83,15 +88,21 @@ function App() {
       xp: estado.jugador.xp + cantidadFinal
     })
 
+<<<<<<< HEAD
     if (estado.jugador.xp + cantidadFinal >= estado.jugador.xpParaSiguienteNivel) {
+=======
+    const xpSiguienteNivel = Math.floor(50 * Math.pow(1.8, estado.jugador.nivel - 1))
+    
+    if (estado.jugador.xp + cantidadFinal >= xpSiguienteNivel) {
+>>>>>>> origin/main
       const nuevoNivel = estado.jugador.nivel + 1
+      const xpRestante = estado.jugador.xp + cantidadFinal - xpSiguienteNivel
       actualizarJugador({
         nivel: nuevoNivel,
-        xp: estado.jugador.xp + cantidadFinal - estado.jugador.xpParaSiguienteNivel,
-        xpParaSiguienteNivel: Math.floor(estado.jugador.xpParaSiguienteNivel * 1.5),
+        xp: xpRestante,
         moneda: estado.jugador.moneda + 50
       })
-      agregarNotificacion(`✨ ¡Subiste al nivel ${nuevoNivel}!`, 'nivel')
+      agregarNotificacion(`✨ Subiste al nivel ${nuevoNivel}!`, 'nivel')
       verificarDesbloqueoNivel(nuevoNivel)
     }
   }
@@ -99,8 +110,7 @@ function App() {
   const verificarDesbloqueoNivel = (nivel) => {
     if (NIVELES_MISIONES[nivel + 1]) {
       const nivelSiguiente = NIVELES_MISIONES[nivel + 1]
-      const misionesCompletadas = estado.misiones.misionesCompletadas?.length || 0
-      if (misionesCompletadas >= nivelSiguiente.requisitoDesbloqueo.misionesCompletadas) {
+      if (estado.jugador.nivel >= nivelSiguiente.xpParaDesbloquear / 10) {
         actualizarMisiones({ nivelDesbloqueado: nivel + 1 })
         agregarNotificacion(`🔓 Nuevo nivel de misiones desbloqueado!`, 'desbloqueo')
       }
@@ -133,6 +143,11 @@ function App() {
       case 'patrimonio':
         cumplio = (finanzas.ahorroTotal + finanzas.inversionTotal) >= mision.requisito.cantidad
         break
+      case 'completarEncuesta':
+      case 'referido':
+      case 'verTutorial':
+        cumplio = true
+        break
       default:
         cumplio = true
     }
@@ -144,6 +159,14 @@ function App() {
 
     const nuevasCompletadas = [...(estado.misiones.misionesCompletadas || []), misionId]
     actualizarMisiones({ misionesCompletadas: nuevasCompletadas })
+    
+    // Agregar saldo según el tipo de misión
+    if (mision.requisito.tipo === 'completarEncuesta') {
+      actualizarFinanzas({ saldo: estado.finanzas.saldo + 50 })
+    } else if (mision.requisito.tipo === 'referido') {
+      actualizarFinanzas({ saldo: estado.finanzas.saldo + 30 })
+    }
+    
     agregarXP(mision.recompensaXP)
     actualizarJugador({ moneda: estado.jugador.moneda + mision.recompensaMonedas })
     agregarNotificacion(`✅ Misión completada: +${mision.recompensaXP} XP, +${mision.recompensaMonedas} 🪙`, 'exito')
@@ -214,13 +237,14 @@ function App() {
   const renderizarVista = () => {
     switch(vistaActual) {
       case 'dashboard':
-        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} />
+        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} actualizarFinanzas={actualizarFinanzas} nivelActual={estado.jugador.nivel} />
       case 'misiones':
         return (
           <Misiones
             jugador={jugador}
             niveles={NIVELES_MISIONES}
             completarMision={completarMision}
+            nivelActual={estado.jugador.nivel}
           />
         )
       case 'cuentas':
@@ -251,7 +275,7 @@ function App() {
           />
         )
       default:
-        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} />
+        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} />
     }
   }
 
@@ -322,6 +346,10 @@ function App() {
           </button>
         </div>
         <div className="player-info">
+          <PersonajePanel 
+            jugador={jugador} 
+            setVistaActual={setVistaActual}
+          />
           <span className="level">Nvl {jugador.nivel}</span>
           <span className="coins">🪙 {jugador.moneda}</span>
           <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">

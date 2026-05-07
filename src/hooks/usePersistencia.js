@@ -9,14 +9,33 @@ const estadoInicial = {
     nombre: 'Explorador',
     nivel: 1,
     xp: 0,
+<<<<<<< HEAD
     xpParaSiguienteNivel: 100,
     moneda: 0,
+=======
+    xpParaSiguienteNivel: 50,
+    moneda: 100,
+>>>>>>> origin/main
     racha: 0,
     insignias: [],
-    perfil: 'moderado'
+    perfil: 'moderado',
+    equipo: {
+      arma: 'palo_madera',
+      armadura: 'tunica_rota',
+      accesorio: null
+    },
+    apariencia: {
+      piel: '#f5c6a1',
+      cabello: '#4a3728',
+      ropa: '#8b7355'
+    }
   },
   finanzas: {
+<<<<<<< HEAD
     saldo: 200,
+=======
+    saldo: 50,
+>>>>>>> origin/main
     ahorroTotal: 0,
     inversionTotal: 0,
     gastosTotales: 0,
@@ -115,9 +134,25 @@ export function usePersistencia() {
       const guardado = localStorage.getItem(CLAVE_GUARDADO)
       if (guardado) {
         const parsed = JSON.parse(guardado)
+<<<<<<< HEAD
         const sesion = obtenerSesion()
         if (sesion) {
           parsed.jugador.nombre = sesion.nombre
+=======
+        if (!parsed.jugador.equipo) {
+          parsed.jugador.equipo = {
+            arma: 'palo_madera',
+            armadura: 'tunica_rota',
+            accesorio: null
+          }
+        }
+        if (!parsed.jugador.apariencia) {
+          parsed.jugador.apariencia = {
+            piel: '#f5c6a1',
+            cabello: '#4a3728',
+            ropa: '#8b7355'
+          }
+>>>>>>> origin/main
         }
         return parsed
       }
