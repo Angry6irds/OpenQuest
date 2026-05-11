@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
-
-const CLAVE_GUARDADO = 'openquest_guardado_v1'
-const CLAVE_USUARIOS = 'openquest_usuarios'
-const CLAVE_SESION = 'openquest_sesion_actual'
+import { supabase } from '../supabaseClient'
 
 const estadoInicial = {
   jugador: {
@@ -41,114 +38,129 @@ const estadoInicial = {
   ultimoAcceso: null
 }
 
-function hashSimple(str) {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash |= 0
-  }
-  return hash.toString(36)
-}
-
-function obtenerUsuarios() {
-  try {
-    const data = localStorage.getItem(CLAVE_USUARIOS)
-    return data ? JSON.parse(data) : []
-  } catch {
-    return []
-  }
-}
-
-function guardarUsuarios(usuarios) {
-  localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios))
-}
-
-export function registrarUsuario(nombre, password, umamusume) {
-  const usuarios = obtenerUsuarios()
+export async function registrarUsuario(nombre, email, password, umamusume) {
   const username = nombre.trim().replace(/\s+/g, '') + '_' + (umamusume || 'Torena')
+  
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username, nombre, umamusume }
+    }
+  })
 
-  if (usuarios.find(u => u.username === username)) {
-    return { error: 'Este nombre de usuario ya existe. Intenta con otro nombre.' }
+  if (error) {
+    let msg = error.message
+    if (msg.includes('already registered')) msg = 'Este correo electrónico ya está registrado.'
+    return { error: msg }
   }
 
-  const nuevoUsuario = {
-    username,
-    passwordHash: hashSimple(password),
-    nombre,
-    umamusume: umamusume || 'Torena',
-    createdAt: new Date().toISOString()
+  // Crear perfil en la base de datos
+  const inicial = { ...estadoInicial }
+  inicial.jugador.nombre = nombre
+  const { error: dbError } = await supabase.from('perfiles').insert({
+    id: data.user.id,
+    estado: inicial
+  })
+
+  if (dbError) {
+    console.error('Error al crear perfil:', dbError)
+    // No bloqueamos el registro, pero el perfil se creará cuando inicie sesión si falla
   }
 
-  usuarios.push(nuevoUsuario)
-  guardarUsuarios(usuarios)
   return { success: true, username }
 }
 
-export function iniciarSesion(username, password) {
-  const usuarios = obtenerUsuarios()
-  const usuario = usuarios.find(u => u.username === username)
-
-  if (!usuario) {
-    return { error: 'Usuario no encontrado.' }
+export async function iniciarSesion(identificador, password) {
+  if (!identificador.includes('@')) {
+    return { error: 'Por favor, inicia sesión usando tu correo electrónico.' }
   }
 
-  if (usuario.passwordHash !== hashSimple(password)) {
-    return { error: 'Contraseña incorrecta.' }
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: identificador,
+    password
+  })
+
+  if (error) {
+    let msg = error.message
+    if (msg.includes('Invalid login')) msg = 'Correo o contraseña incorrectos.'
+    return { error: msg }
   }
 
-  localStorage.setItem(CLAVE_SESION, JSON.stringify({ username, nombre: usuario.nombre }))
-  return { success: true, usuario }
+  return { success: true, usuario: data.user.user_metadata }
 }
 
-export function cerrarSesion() {
-  localStorage.removeItem(CLAVE_SESION)
-  localStorage.removeItem(CLAVE_GUARDADO)
-}
-
-export function obtenerSesion() {
-  try {
-    const data = localStorage.getItem(CLAVE_SESION)
-    return data ? JSON.parse(data) : null
-  } catch {
-    return null
-  }
-}
-
-export function hayUsuariosRegistrados() {
-  return obtenerUsuarios().length > 0
+export async function cerrarSesion() {
+  await supabase.auth.signOut()
 }
 
 export function usePersistencia() {
-  const [estado, setEstado] = useState(() => {
-    try {
-      const guardado = localStorage.getItem(CLAVE_GUARDADO)
-      if (guardado) {
-        const parsed = JSON.parse(guardado)
-        const sesion = obtenerSesion()
-        if (sesion) {
-          parsed.jugador.nombre = sesion.nombre
-        }
-        return parsed
-      }
-    } catch (e) {
-      console.error('Error al cargar guardado:', e)
-    }
-    const inicial = { ...estadoInicial }
-    const sesion = obtenerSesion()
-    if (sesion) {
-      inicial.jugador.nombre = sesion.nombre
-    }
-    return inicial
-  })
+  const [estado, setEstado] = useState(estadoInicial)
+  const [cargandoDatos, setCargandoDatos] = useState(true)
 
   useEffect(() => {
-    try {
-      localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(estado))
-    } catch (e) {
-      console.error('Error al guardar:', e)
+    async function cargarDatos() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setCargandoDatos(false)
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('perfiles')
+        .select('estado')
+        .eq('id', session.user.id)
+        .single()
+
+      if (data && data.estado) {
+        setEstado(prev => ({ ...prev, ...data.estado }))
+      } else if (error && error.code === 'PGRST116') {
+        // No existe el perfil, lo creamos
+        const inicial = { ...estadoInicial }
+        inicial.jugador.nombre = session.user.user_metadata.nombre || 'Explorador'
+        await supabase.from('perfiles').insert({
+          id: session.user.id,
+          estado: inicial
+        })
+        setEstado(inicial)
+      }
+      setCargandoDatos(false)
     }
-  }, [estado])
+
+    cargarDatos()
+
+    // Suscribirse a cambios de sesión por si recarga
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        cargarDatos()
+      } else if (event === 'SIGNED_OUT') {
+        setEstado(estadoInicial)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    if (cargandoDatos) return
+
+    const guardar = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        await supabase.from('perfiles').upsert({
+          id: session.user.id,
+          estado: estado
+        })
+      }
+    }
+
+    // Usamos un debounce de 1 segundo para no hacer peticiones a la BD en cada clic
+    const timeoutId = setTimeout(() => {
+      guardar()
+    }, 1000)
+
+    return () => clearTimeout(timeoutId)
+  }, [estado, cargandoDatos])
 
   const actualizarJugador = (nuevoJugador) => {
     setEstado(prev => ({
@@ -190,19 +202,14 @@ export function usePersistencia() {
     actualizarJugador({ moneda: estado.jugador.moneda + cantidad })
   }
 
-  const resetearProgreso = () => {
-    localStorage.removeItem(CLAVE_GUARDADO)
-    setEstado(estadoInicial)
-  }
-
   return {
     estado,
+    cargandoDatos,
     actualizarJugador,
     actualizarFinanzas,
     actualizarMisiones,
     agregarMejora,
     gastarMonedas,
-    agregarMonedas,
-    resetearProgreso
+    agregarMonedas
   }
 }

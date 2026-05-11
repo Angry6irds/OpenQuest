@@ -9,15 +9,17 @@ import MiniJuegos from './components/MiniJuegos'
 import Login from './components/Login'
 import Registro from './components/Registro'
 import PersonajePanel from './components/PersonajePanel'
-import { usePersistencia, obtenerSesion, cerrarSesion } from './hooks/usePersistencia.jsx'
+import { usePersistencia, cerrarSesion } from './hooks/usePersistencia.jsx'
+import { supabase } from './supabaseClient'
 import { NIVELES_MISIONES, INSIGNIAS, MEJORAS } from './data/misiones'
 import './App.css'
 
 function App() {
   const [vistaActual, setVistaActual] = useState('dashboard')
-  const [vistaAutenticacion, setVistaAutenticacion] = useState(null)
+  const [vistaAutenticacion, setVistaAutenticacion] = useState('cargando')
   const {
     estado,
+    cargandoDatos,
     actualizarJugador,
     actualizarFinanzas,
     actualizarMisiones,
@@ -29,12 +31,15 @@ function App() {
   const [notificaciones, setNotificaciones] = useState([])
 
   useEffect(() => {
-    const sesion = obtenerSesion()
-    if (sesion) {
-      setVistaAutenticacion(null)
-    } else {
-      setVistaAutenticacion('login')
-    }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setVistaAutenticacion(session ? null : 'login')
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setVistaAutenticacion(session ? null : 'login')
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -228,7 +233,7 @@ function App() {
   const renderizarVista = () => {
     switch(vistaActual) {
       case 'dashboard':
-        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} actualizarFinanzas={actualizarFinanzas} nivelActual={estado.jugador.nivel} />
+        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} actualizarFinanzas={actualizarFinanzas} nivelActual={estado.jugador.nivel} handleLogout={handleLogout} />
       case 'misiones':
         return (
           <Misiones
@@ -266,8 +271,17 @@ function App() {
           />
         )
       default:
-        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} />
+        return <Dashboard jugador={jugador} setVistaActual={setVistaActual} completarMision={(mid, nid) => completarMision(mid, 1)} handleLogout={handleLogout} />
     }
+  }
+
+  if (vistaAutenticacion === 'cargando' || (vistaAutenticacion === null && cargandoDatos)) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ fontSize: '3rem' }}>⚔️</div>
+        <h2>Cargando aventura...</h2>
+      </div>
+    )
   }
 
   if (vistaAutenticacion === 'login') {

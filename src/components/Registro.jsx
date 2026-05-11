@@ -19,6 +19,7 @@ const UMAMUSUME_OPTIONS = [
 function Registro({ onRegistroExitoso, onVolverLogin }) {
   const [formData, setFormData] = useState({
     nombre: '',
+    email: '',
     password: '',
     passwordConfirm: '',
     umamusume: ''
@@ -55,7 +56,7 @@ function Registro({ onRegistroExitoso, onVolverLogin }) {
 
     setLoading(true)
 
-    const resultado = registrarUsuario(formData.nombre, formData.password, formData.umamusume)
+    const resultado = await registrarUsuario(formData.nombre, formData.email, formData.password, formData.umamusume)
 
     setLoading(false)
 
@@ -86,6 +87,19 @@ function Registro({ onRegistroExitoso, onVolverLogin }) {
               placeholder="Tu nombre real"
               required
               minLength={3}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Correo electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="tu@correo.com"
+              required
             />
           </div>
 

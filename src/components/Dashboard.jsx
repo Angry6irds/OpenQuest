@@ -71,7 +71,7 @@ function shuffleArray(array) {
   return arr
 }
 
-function Dashboard({ jugador, setVistaActual, completarMision, actualizarFinanzas, nivelActual = 1 }) {
+function Dashboard({ jugador, setVistaActual, completarMision, actualizarFinanzas, nivelActual = 1, handleLogout }) {
   const [saldo, setSaldo] = useState(50)
   const [ahorroTotal, setAhorroTotal] = useState(0)
   const [inversionTotal, setInversionTotal] = useState(0)
@@ -328,6 +328,11 @@ function Dashboard({ jugador, setVistaActual, completarMision, actualizarFinanza
           <button className="action-btn" onClick={() => setVistaActual('tienda')}>
             🛒 Tienda
           </button>
+          {handleLogout && (
+            <button className="action-btn" onClick={handleLogout} style={{ background: 'var(--danger)', color: 'white' }}>
+              🚪 Cerrar Sesión
+            </button>
+          )}
         </div>
       </section>
 

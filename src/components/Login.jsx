@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { hayUsuariosRegistrados, iniciarSesion } from '../hooks/usePersistencia'
+import { iniciarSesion } from '../hooks/usePersistencia'
 
 function Login({ onLoginExitoso, onIrRegistro }) {
   const [formData, setFormData] = useState({
@@ -11,7 +11,9 @@ function Login({ onLoginExitoso, onIrRegistro }) {
   const [hayUsuarios, setHayUsuarios] = useState(false)
 
   useEffect(() => {
-    setHayUsuarios(hayUsuariosRegistrados())
+    // Ya no podemos saber sincrónicamente si hay usuarios, asumimos que sí
+    // para no mostrar el mensaje de "primer usuario" por defecto.
+    setHayUsuarios(true)
   }, [])
 
   const handleChange = (e) => {
@@ -27,7 +29,7 @@ function Login({ onLoginExitoso, onIrRegistro }) {
     setError('')
     setLoading(true)
 
-    const resultado = iniciarSesion(formData.username, formData.password)
+    const resultado = await iniciarSesion(formData.username, formData.password)
 
     setLoading(false)
 
@@ -48,14 +50,14 @@ function Login({ onLoginExitoso, onIrRegistro }) {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Nombre de usuario</label>
+            <label htmlFor="username">Usuario o Correo electrónico</label>
             <input
               type="text"
               id="username"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="Ej: Alex_SpecialWeek"
+              placeholder="Ej: Alex_SpecialWeek o tu@correo.com"
               required
               autoComplete="username"
             />
