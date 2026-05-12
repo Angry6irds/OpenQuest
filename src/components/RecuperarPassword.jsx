@@ -18,7 +18,11 @@ function RecuperarPassword({ onVolverLogin }) {
     setLoading(false)
 
     if (resultado.error) {
-      setError(resultado.error)
+      if (resultado.error.includes('rate limit')) {
+        setError('Has solicitado demasiados enlaces en muy poco tiempo. Por favor, espera un par de minutos y vuelve a intentarlo.')
+      } else {
+        setError(resultado.error)
+      }
     } else {
       setSuccess(true)
     }
