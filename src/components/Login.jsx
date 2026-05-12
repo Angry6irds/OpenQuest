@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { iniciarSesion } from '../hooks/usePersistencia'
 
-function Login({ onLoginExitoso, onIrRegistro }) {
+function Login({ onLoginExitoso, onIrRegistro, onIrRecuperar }) {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -96,6 +96,11 @@ function Login({ onLoginExitoso, onIrRegistro }) {
         )}
 
         <div className="auth-footer">
+          <p style={{ marginBottom: '0.5rem' }}>
+            <button className="auth-link" onClick={onIrRecuperar} style={{ fontSize: '0.85rem' }}>
+              ¿Olvidaste tu contraseña?
+            </button>
+          </p>
           <p>
             ¿No tienes cuenta?{' '}
             <button className="auth-link" onClick={onIrRegistro}>

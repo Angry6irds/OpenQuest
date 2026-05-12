@@ -54,6 +54,13 @@ function Registro({ onRegistroExitoso, onVolverLogin }) {
       return
     }
 
+    const dominiosPermitidos = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'live.com']
+    const emailParts = formData.email.split('@')
+    if (emailParts.length !== 2 || !dominiosPermitidos.includes(emailParts[1].toLowerCase())) {
+      setError('Por favor usa un proveedor de correo oficial (gmail.com, hotmail.com, outlook.com, etc).')
+      return
+    }
+
     setLoading(true)
 
     const resultado = await registrarUsuario(formData.nombre, formData.email, formData.password, formData.umamusume)

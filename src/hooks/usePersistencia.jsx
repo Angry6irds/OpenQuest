@@ -94,6 +94,20 @@ export async function cerrarSesion() {
   await supabase.auth.signOut()
 }
 
+export async function solicitarRecuperacionPassword(email) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname,
+  })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function actualizarPassword(newPassword) {
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
 export function usePersistencia() {
   const [estado, setEstado] = useState(estadoInicial)
   const [cargandoDatos, setCargandoDatos] = useState(true)

@@ -8,6 +8,8 @@ import Tienda from './components/Tienda'
 import MiniJuegos from './components/MiniJuegos'
 import Login from './components/Login'
 import Registro from './components/Registro'
+import RecuperarPassword from './components/RecuperarPassword'
+import NuevaPassword from './components/NuevaPassword'
 import PersonajePanel from './components/PersonajePanel'
 import { usePersistencia, cerrarSesion } from './hooks/usePersistencia.jsx'
 import { supabase } from './supabaseClient'
@@ -31,12 +33,27 @@ function App() {
   const [notificaciones, setNotificaciones] = useState([])
 
   useEffect(() => {
+    // Si la URL contiene un token de recuperación, forzamos la vista
+    if (window.location.hash.includes('type=recovery')) {
+      setVistaAutenticacion('nueva-password')
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setVistaAutenticacion(session ? null : 'login')
+      setVistaAutenticacion(prev => {
+        // No sobreescribir si ya estamos en modo recuperación
+        if (prev === 'nueva-password') return prev
+        return session ? null : 'login'
+      })
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setVistaAutenticacion(session ? null : 'login')
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setVistaAutenticacion('nueva-password')
+      } else if (event === 'SIGNED_IN') {
+        setVistaAutenticacion(prev => prev === 'nueva-password' ? prev : null)
+      } else if (event === 'SIGNED_OUT') {
+        setVistaAutenticacion('login')
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -289,6 +306,23 @@ function App() {
       <Login
         onLoginExitoso={() => setVistaAutenticacion(null)}
         onIrRegistro={() => setVistaAutenticacion('registro')}
+        onIrRecuperar={() => setVistaAutenticacion('recuperar')}
+      />
+    )
+  }
+
+  if (vistaAutenticacion === 'recuperar') {
+    return (
+      <RecuperarPassword
+        onVolverLogin={() => setVistaAutenticacion('login')}
+      />
+    )
+  }
+
+  if (vistaAutenticacion === 'nueva-password') {
+    return (
+      <NuevaPassword
+        onPasswordActualizada={() => setVistaAutenticacion(null)}
       />
     )
   }
