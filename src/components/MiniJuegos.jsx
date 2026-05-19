@@ -74,7 +74,20 @@ function MiniJuegos({ jugador, actualizarJugador, actualizarFinanzas, agregarNot
       agregarNotificacion('⚠️ No tienes suficiente energía para jugar. ¡Compra comida en Cuentas!', 'error')
       return
     }
-    actualizarJugador({ energia: jugador.energia - 10 })
+
+    if ((jugador.felicidad || 0) < 20) {
+      agregarNotificacion('⚠️ Tu héroe está muy triste para jugar. ¡Llévalo a divertirse en Cuentas!', 'error')
+      return
+    }
+
+    const felicidadPerdida = Math.floor(Math.random() * 21) + 20 // Random entre 20 y 40
+
+    actualizarJugador({ 
+      energia: jugador.energia - 10,
+      felicidad: Math.max(0, jugador.felicidad - felicidadPerdida)
+    })
+
+    agregarNotificacion(`🎮 Empezando... (-10⚡, -${felicidadPerdida}😊)`, 'info')
     setJuegoSeleccionado(id)
   }
 
@@ -116,7 +129,7 @@ function MiniJuegos({ jugador, actualizarJugador, actualizarFinanzas, agregarNot
     <div className="minijuegos">
       <header className="minijuegos-header">
         <h2>🎮 Minijuegos</h2>
-        <p className="subtitle" style={{marginBottom: '1rem'}}>Gana saldo ($) para comprar comida (Cuesta 10⚡)</p>
+        <p className="subtitle" style={{marginBottom: '1rem'}}>Gana saldo ($). Cuesta 10⚡ y 20-40😊</p>
         <div className="monedas-disponibles">
           <span className="moneda-icon">⚡</span>
           <span className="moneda-cantidad">{jugador.energia || 100}</span>

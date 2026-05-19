@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function Cuentas({ jugador, comprarComida }) {
+function Cuentas({ jugador, comprarComida, comprarEntretenimiento }) {
   const [mostrarFormularioGasto, setMostrarFormularioGasto] = useState(false)
   const [nuevoGasto, setNuevoGasto] = useState({ descripcion: '', monto: '' })
 
@@ -22,6 +22,12 @@ function Cuentas({ jugador, comprarComida }) {
     { id: 5, descripcion: '🍱 Menú saludable', monto: 25, energia: 70 },
   ])
 
+  const [opcionesEntretenimiento] = useState([
+    { id: 1, descripcion: '🍿 Ir al Cine', monto: 30, felicidad: 30 },
+    { id: 2, descripcion: '🎪 Parque de Diversiones', monto: 50, felicidad: 60 },
+    { id: 3, descripcion: '🎸 Ir a un Concierto', monto: 80, felicidad: 100 },
+  ])
+
   const toggleTarjeta = (id) => {
     setTarjetas(prev => prev.map(t =>
       t.id === id ? { ...t, activa: !t.activa } : t
@@ -30,6 +36,10 @@ function Cuentas({ jugador, comprarComida }) {
 
   const registrarComidaRapida = (comida) => {
     comprarComida(comida.monto, comida.descripcion, comida.energia)
+  }
+
+  const registrarEntretenimiento = (opcion) => {
+    comprarEntretenimiento(opcion.monto, opcion.descripcion, opcion.felicidad)
   }
 
   const handleSubmitGasto = (e) => {
@@ -107,6 +117,25 @@ function Cuentas({ jugador, comprarComida }) {
         <div className="total-gastos-card">
           <span className="total-gastos-label">Gastos totales acumulados:</span>
           <span className="total-gastos-monto">${jugador.finanzas?.gastosTotales || 0}</span>
+        </div>
+      </section>
+
+      {/* Registro de entretenimiento */}
+      <section className="registro-gastos-section">
+        <h3>🎪 Comprar Entretenimiento (Recuperar Felicidad)</h3>
+        <p className="subtitle" style={{marginBottom: '1rem'}}>Diviértete un poco para mantener tu felicidad al máximo.</p>
+        <div className="gastos-rapidos-grid">
+          {opcionesEntretenimiento.map(opcion => (
+            <button
+              key={opcion.id}
+              className="gasto-rapido-btn"
+              onClick={() => registrarEntretenimiento(opcion)}
+            >
+              <span className="gasto-icono">{opcion.descripcion.split(' ')[0]}</span>
+              <span className="gasto-desc">{opcion.descripcion.split(' ').slice(1).join(' ')}</span>
+              <span className="gasto-monto">-${opcion.monto} <br/><span style={{fontSize: '0.8rem', color: '#F59E0B'}}>+{opcion.felicidad}😊</span></span>
+            </button>
+          ))}
         </div>
       </section>
 

@@ -210,6 +210,23 @@ function App() {
     agregarNotificacion(`🍖 Compraste ${descripcion}: +${energiaRecuperada}⚡`, 'exito')
   }
 
+  const comprarEntretenimiento = (cantidad, descripcion, felicidadRecuperada) => {
+    if (estado.finanzas.saldo < cantidad) {
+      agregarNotificacion('⚠️ No tienes suficiente saldo', 'error')
+      return
+    }
+
+    actualizarFinanzas({
+      saldo: estado.finanzas.saldo - cantidad,
+      gastosTotales: estado.finanzas.gastosTotales + cantidad
+    })
+
+    const nuevaFelicidad = Math.min(100, (estado.jugador.felicidad || 0) + felicidadRecuperada)
+    actualizarJugador({ felicidad: nuevaFelicidad })
+
+    agregarNotificacion(`🎪 Disfrutaste ${descripcion}: +${felicidadRecuperada}😊`, 'exito')
+  }
+
   const registrarDeposito = (cantidad) => {
     const ahorroAuto = estado.mejoras?.find(m => m.id === 'ahorro_auto')
     const ahorroExtra = ahorroAuto ? Math.floor(cantidad * ahorroAuto.beneficio.ahorroAutomatico) : 0
@@ -262,7 +279,7 @@ function App() {
           />
         )
       case 'cuentas':
-        return <Cuentas jugador={jugador} comprarComida={comprarComida} />
+        return <Cuentas jugador={jugador} comprarComida={comprarComida} comprarEntretenimiento={comprarEntretenimiento} />
       case 'ahorro':
         return (
           <Ahorro
@@ -393,6 +410,7 @@ function App() {
             setVistaActual={setVistaActual}
           />
           <span className="level" style={{marginRight: '0.5rem', background: 'var(--success)', color: 'white'}}>⚡ {jugador.energia || 100}</span>
+          <span className="level" style={{marginRight: '0.5rem', background: '#F59E0B', color: 'white'}}>😊 {jugador.felicidad || 100}</span>
           <span className="level">Nvl {jugador.nivel}</span>
           <span className="coins">🪙 {jugador.moneda}</span>
           <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
