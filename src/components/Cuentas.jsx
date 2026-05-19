@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function Cuentas({ jugador, registrarGasto }) {
+function Cuentas({ jugador, comprarComida }) {
   const [mostrarFormularioGasto, setMostrarFormularioGasto] = useState(false)
   const [nuevoGasto, setNuevoGasto] = useState({ descripcion: '', monto: '' })
 
@@ -14,12 +14,12 @@ function Cuentas({ jugador, registrarGasto }) {
     { id: 2, nombre: 'Tarjeta Física', tipo: 'fisica', activa: true, ultimo4: '8921' },
   ])
 
-  const [gastosRapidos, setGastosRapidos] = useState([
-    { id: 1, descripcion: '🍔 Comida rápida', monto: 15 },
-    { id: 2, descripcion: '☕ Café', monto: 5 },
-    { id: 3, descripcion: '🛒 Supermercado', monto: 50 },
-    { id: 4, descripcion: '🎬 Entretenimiento', monto: 25 },
-    { id: 5, descripcion: '⛽ Combustible', monto: 40 },
+  const [comidasRapidas] = useState([
+    { id: 1, descripcion: '🍎 Manzana', monto: 5, energia: 10 },
+    { id: 2, descripcion: '☕ Café', monto: 5, energia: 15 },
+    { id: 3, descripcion: '🥪 Sandwich', monto: 10, energia: 25 },
+    { id: 4, descripcion: '🍔 Comida rápida', monto: 15, energia: 40 },
+    { id: 5, descripcion: '🍱 Menú saludable', monto: 25, energia: 70 },
   ])
 
   const toggleTarjeta = (id) => {
@@ -28,14 +28,14 @@ function Cuentas({ jugador, registrarGasto }) {
     ))
   }
 
-  const registrarGastoRapido = (gasto) => {
-    registrarGasto(gasto.monto, gasto.descripcion)
+  const registrarComidaRapida = (comida) => {
+    comprarComida(comida.monto, comida.descripcion, comida.energia)
   }
 
   const handleSubmitGasto = (e) => {
     e.preventDefault()
     if (nuevoGasto.descripcion && nuevoGasto.monto) {
-      registrarGasto(Number(nuevoGasto.monto), nuevoGasto.descripcion)
+      comprarComida(Number(nuevoGasto.monto), nuevoGasto.descripcion, Number(nuevoGasto.monto) * 2) // Default energy logic for custom
       setNuevoGasto({ descripcion: '', monto: '' })
       setMostrarFormularioGasto(false)
     }
@@ -50,17 +50,18 @@ function Cuentas({ jugador, registrarGasto }) {
 
       {/* Registro de gastos */}
       <section className="registro-gastos-section">
-        <h3>💸 Registrar Gasto</h3>
+        <h3>🍖 Comprar Comida (Recuperar Energía)</h3>
+        <p className="subtitle" style={{marginBottom: '1rem'}}>Elige qué quieres darle a tu héroe para que recupere energías y pueda jugar minijuegos.</p>
         <div className="gastos-rapidos-grid">
-          {gastosRapidos.map(gasto => (
+          {comidasRapidas.map(comida => (
             <button
-              key={gasto.id}
+              key={comida.id}
               className="gasto-rapido-btn"
-              onClick={() => registrarGastoRapido(gasto)}
+              onClick={() => registrarComidaRapida(comida)}
             >
-              <span className="gasto-icono">{gasto.descripcion.split(' ')[0]}</span>
-              <span className="gasto-desc">{gasto.descripcion.split(' ').slice(1).join(' ')}</span>
-              <span className="gasto-monto">-${gasto.monto}</span>
+              <span className="gasto-icono">{comida.descripcion.split(' ')[0]}</span>
+              <span className="gasto-desc">{comida.descripcion.split(' ').slice(1).join(' ')}</span>
+              <span className="gasto-monto">-${comida.monto} <br/><span style={{fontSize: '0.8rem', color: 'var(--success)'}}>+{comida.energia}⚡</span></span>
             </button>
           ))}
         </div>
@@ -70,14 +71,14 @@ function Cuentas({ jugador, registrarGasto }) {
             className="crear-apartado-btn"
             onClick={() => setMostrarFormularioGasto(true)}
           >
-            ➕ Otro gasto
+            ➕ Otra comida
           </button>
         ) : (
           <form className="formulario-gasto" onSubmit={handleSubmitGasto}>
-            <h4>Registrar gasto personalizado</h4>
+            <h4>Comprar algo diferente</h4>
             <input
               type="text"
-              placeholder="Descripción (ej: Compra en tienda)"
+              placeholder="Descripción (ej: Batido)"
               value={nuevoGasto.descripcion}
               onChange={(e) => setNuevoGasto(prev => ({ ...prev, descripcion: e.target.value }))}
               required

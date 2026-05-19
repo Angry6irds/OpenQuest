@@ -9,6 +9,9 @@ const estadoInicial = {
     xpParaSiguienteNivel: 100,
     moneda: 0,
     racha: 0,
+    energia: 100,
+    felicidad: 100,
+    cansancio: 0,
     insignias: [],
     perfil: 'moderado',
     equipo: {
@@ -127,7 +130,11 @@ export function usePersistencia() {
         .single()
 
       if (data && data.estado) {
-        setEstado(prev => ({ ...prev, ...data.estado }))
+        setEstado(prev => ({ 
+          ...prev, 
+          ...data.estado,
+          jugador: { ...estadoInicial.jugador, ...(data.estado.jugador || {}) }
+        }))
       } else if (error && error.code === 'PGRST116') {
         // No existe el perfil, lo creamos
         const inicial = { ...estadoInicial }

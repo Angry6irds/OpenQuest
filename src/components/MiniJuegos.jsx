@@ -61,8 +61,22 @@ const GASTOS_PRESUPUESTO = [
   { nombre: 'Salidas bar', tipo: 'deseo' }
 ]
 
-function MiniJuegos({ jugador, agregarMonedas }) {
+function MiniJuegos({ jugador, actualizarJugador, actualizarFinanzas, agregarNotificacion }) {
   const [juegoSeleccionado, setJuegoSeleccionado] = useState(null)
+
+  const ganarDineroReal = (cantidad) => {
+    actualizarFinanzas({ saldo: (jugador.finanzas?.saldo || 0) + cantidad })
+    agregarNotificacion(`🎉 ¡Ganaste $${cantidad} jugando!`, 'exito')
+  }
+
+  const iniciarJuego = (id) => {
+    if ((jugador.energia || 0) < 10) {
+      agregarNotificacion('⚠️ No tienes suficiente energía para jugar. ¡Compra comida en Cuentas!', 'error')
+      return
+    }
+    actualizarJugador({ energia: jugador.energia - 10 })
+    setJuegoSeleccionado(id)
+  }
 
   const juegos = [
     {
@@ -89,23 +103,23 @@ function MiniJuegos({ jugador, agregarMonedas }) {
   ]
 
   if (juegoSeleccionado === 'quiz') {
-    return <QuizFinanciero onVolver={() => setJuegoSeleccionado(null)} agregarMonedas={agregarMonedas} />
+    return <QuizFinanciero onVolver={() => setJuegoSeleccionado(null)} ganarDineroReal={ganarDineroReal} />
   }
   if (juegoSeleccionado === 'memory') {
-    return <MemoryMonedas onVolver={() => setJuegoSeleccionado(null)} agregarMonedas={agregarMonedas} />
+    return <MemoryMonedas onVolver={() => setJuegoSeleccionado(null)} ganarDineroReal={ganarDineroReal} />
   }
   if (juegoSeleccionado === 'presupuesto') {
-    return <PresupuestoChallenge onVolver={() => setJuegoSeleccionado(null)} agregarMonedas={agregarMonedas} />
+    return <PresupuestoChallenge onVolver={() => setJuegoSeleccionado(null)} ganarDineroReal={ganarDineroReal} />
   }
 
   return (
     <div className="minijuegos">
       <header className="minijuegos-header">
         <h2>🎮 Minijuegos</h2>
-        <p className="subtitle">Gana monedas divirtiéndote</p>
+        <p className="subtitle" style={{marginBottom: '1rem'}}>Gana saldo ($) para comprar comida (Cuesta 10⚡)</p>
         <div className="monedas-disponibles">
-          <span className="moneda-icon">🪙</span>
-          <span className="moneda-cantidad">{jugador.moneda}</span>
+          <span className="moneda-icon">⚡</span>
+          <span className="moneda-cantidad">{jugador.energia || 100}</span>
         </div>
       </header>
 
@@ -117,7 +131,7 @@ function MiniJuegos({ jugador, agregarMonedas }) {
             <p className="recompensa-info">💰 {juego.recompensa}</p>
             <button
               className="jugar-btn"
-              onClick={() => setJuegoSeleccionado(juego.id)}
+              onClick={() => iniciarJuego(juego.id)}
             >
               🎮 Jugar
             </button>
@@ -128,7 +142,7 @@ function MiniJuegos({ jugador, agregarMonedas }) {
   )
 }
 
-function QuizFinanciero({ onVolver, agregarMonedas }) {
+function QuizFinanciero({ onVolver, ganarDineroReal }) {
   const [preguntaActual, setPreguntaActual] = useState(0)
   const [respuestasCorrectas, setRespuestasCorrectas] = useState(0)
   const [finalizado, setFinalizado] = useState(false)
@@ -143,7 +157,6 @@ function QuizFinanciero({ onVolver, agregarMonedas }) {
     const esCorrecta = indice === PREGUNTAS_QUIZ[preguntaActual].correcta
     if (esCorrecta) {
       setRespuestasCorrectas(prev => prev + 1)
-      agregarMonedas(10)
     }
 
     setTimeout(() => {
@@ -153,6 +166,8 @@ function QuizFinanciero({ onVolver, agregarMonedas }) {
         setMostrandoResultado(false)
       } else {
         setFinalizado(true)
+        const recompensa = 5 + (esCorrecta ? respuestasCorrectas + 1 : respuestasCorrectas)
+        ganarDineroReal(Math.min(10, recompensa))
       }
     }, 1500)
   }
@@ -174,7 +189,7 @@ function QuizFinanciero({ onVolver, agregarMonedas }) {
             Respondiste correctamente {respuestasCorrectas} de {PREGUNTAS_QUIZ.length} preguntas
           </p>
           <p className="recompensa-ganada">
-            💰 Ganaste: ${respuestasCorrectas * 10}
+            💰 Ganaste: ${5 + respuestasCorrectas}
           </p>
           <div className="resultado-actions">
             <button className="jugar-btn" onClick={reiniciar}>🔄 Jugar de nuevo</button>
@@ -225,7 +240,7 @@ function QuizFinanciero({ onVolver, agregarMonedas }) {
   )
 }
 
-function MemoryMonedas({ onVolver, agregarMonedas }) {
+function MemoryMonedas({ onVolver, ganarDineroReal }) {
   const [cartas, setCartas] = useState([])
   const [volteadas, setVolteadas] = useState([])
   const [encontrados, setEncontrados] = useState([])
@@ -253,14 +268,14 @@ function MemoryMonedas({ onVolver, agregarMonedas }) {
   }, [volteadas, cartas])
 
   useEffect(() => {
-    if (encontrados.length === 8 && encontrados.length > 0) {
+    if (encontrados.length === 8 && encontrados.length > 0 && !finalizado) {
       setTimeout(() => {
-        const recompensa = movimientos <= 20 ? 20 : movimientos <= 30 ? 10 : 5
-        agregarMonedas(recompensa)
+        const recompensa = movimientos <= 16 ? 10 : movimientos <= 24 ? 7 : 5
+        ganarDineroReal(recompensa)
         setFinalizado(true)
       }, 500)
     }
-  }, [encontrados, movimientos, agregarMonedas])
+  }, [encontrados, movimientos, ganarDineroReal, finalizado])
 
   const voltearCarta = (idx) => {
     if (volteadas.length >= 2 || volteadas.includes(idx) || encontrados.includes(cartas[idx]?.icono)) {
@@ -281,7 +296,7 @@ function MemoryMonedas({ onVolver, agregarMonedas }) {
   }
 
   if (finalizado) {
-    const recompensa = movimientos <= 20 ? 20 : movimientos <= 30 ? 10 : 5
+    const recompensa = movimientos <= 16 ? 10 : movimientos <= 24 ? 7 : 5
     return (
       <div className="minijuegos">
         <div className="resultado-card memory">
@@ -329,7 +344,7 @@ function MemoryMonedas({ onVolver, agregarMonedas }) {
   )
 }
 
-function PresupuestoChallenge({ onVolver, agregarMonedas }) {
+function PresupuestoChallenge({ onVolver, ganarDineroReal }) {
   const [gastoActual, setGastoActual] = useState(0)
   const [correctos, setCorrectos] = useState(0)
   const [finalizado, setFinalizado] = useState(false)
@@ -342,13 +357,13 @@ function PresupuestoChallenge({ onVolver, agregarMonedas }) {
       intervalo = setInterval(() => {
         setTiempo(prev => prev - 1)
       }, 1000)
-    } else if (tiempo === 0 && jugando) {
+    } else if (tiempo === 0 && jugando && !finalizado) {
       setFinalizado(true)
-      const recompensa = correctos * 5 + (correctos >= 9 ? 10 : 0)
-      agregarMonedas(recompensa)
+      const recompensa = Math.min(10, Math.max(5, 5 + Math.floor(correctos / 2)))
+      ganarDineroReal(recompensa)
     }
     return () => clearInterval(intervalo)
-  }, [jugando, tiempo, finalizado, correctos, agregarMonedas])
+  }, [jugando, tiempo, finalizado, correctos, ganarDineroReal])
 
   const iniciarJuego = () => {
     setJugando(true)
@@ -361,15 +376,15 @@ function PresupuestoChallenge({ onVolver, agregarMonedas }) {
     const esCorrecto = GASTOS_PRESUPUESTO[gastoActual].tipo === tipo
     if (esCorrecto) {
       setCorrectos(prev => prev + 1)
-      agregarMonedas(5)
     }
 
     if (gastoActual < GASTOS_PRESUPUESTO.length - 1) {
       setGastoActual(prev => prev + 1)
     } else {
       setFinalizado(true)
-      const bonus = correctos + (esCorrecto ? 1 : 0) >= 9 ? 10 : 0
-      if (bonus > 0) agregarMonedas(bonus)
+      const correctosFinales = esCorrecto ? correctos + 1 : correctos
+      const recompensa = Math.min(10, Math.max(5, 5 + Math.floor(correctosFinales / 2)))
+      ganarDineroReal(recompensa)
     }
   }
 
@@ -400,7 +415,7 @@ function PresupuestoChallenge({ onVolver, agregarMonedas }) {
   }
 
   if (finalizado) {
-    const bonus = correctos >= 9 ? 10 : 0
+    const recompensa = Math.min(10, Math.max(5, 5 + Math.floor(correctos / 2)))
     return (
       <div className="minijuegos">
         <div className="resultado-card presupuesto">
@@ -409,7 +424,7 @@ function PresupuestoChallenge({ onVolver, agregarMonedas }) {
             Clasificaste correctamente {correctos} de {GASTOS_PRESUPUESTO.length} gastos
           </p>
           <p className="recompensa-ganada">
-            💰 Ganaste: ${correctos * 5 + bonus}
+            💰 Ganaste: ${recompensa}
           </p>
           <div className="resultado-actions">
             <button className="jugar-btn" onClick={reiniciar}>🔄 Jugar de nuevo</button>

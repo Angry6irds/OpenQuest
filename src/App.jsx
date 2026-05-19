@@ -193,20 +193,21 @@ function App() {
     }
   }
 
-  const registrarGasto = (cantidad, descripcion) => {
+  const comprarComida = (cantidad, descripcion, energiaRecuperada) => {
+    if (estado.finanzas.saldo < cantidad) {
+      agregarNotificacion('⚠️ No tienes suficiente saldo', 'error')
+      return
+    }
+
     actualizarFinanzas({
       saldo: estado.finanzas.saldo - cantidad,
       gastosTotales: estado.finanzas.gastosTotales + cantidad
     })
 
-    const cashback = estado.mejoras?.find(m => m.id === 'cashback')
-    if (cashback) {
-      const cashbackAmount = Math.floor(cantidad * cashback.beneficio.cashback)
-      actualizarJugador({ moneda: estado.jugador.moneda + cashbackAmount })
-      agregarNotificacion(`💰 Cashback: +${cashbackAmount} 🪙`, 'info')
-    }
+    const nuevaEnergia = Math.min(100, (estado.jugador.energia || 0) + energiaRecuperada)
+    actualizarJugador({ energia: nuevaEnergia })
 
-    agregarNotificacion(`💸 Gasto: $${cantidad} - ${descripcion}`, 'gasto')
+    agregarNotificacion(`🍖 Compraste ${descripcion}: +${energiaRecuperada}⚡`, 'exito')
   }
 
   const registrarDeposito = (cantidad) => {
@@ -261,7 +262,7 @@ function App() {
           />
         )
       case 'cuentas':
-        return <Cuentas jugador={jugador} registrarGasto={registrarGasto} />
+        return <Cuentas jugador={jugador} comprarComida={comprarComida} />
       case 'ahorro':
         return (
           <Ahorro
@@ -284,7 +285,9 @@ function App() {
         return (
           <MiniJuegos
             jugador={jugador}
-            agregarMonedas={agregarMonedas}
+            actualizarJugador={actualizarJugador}
+            actualizarFinanzas={actualizarFinanzas}
+            agregarNotificacion={agregarNotificacion}
           />
         )
       default:
@@ -389,6 +392,7 @@ function App() {
             jugador={jugador} 
             setVistaActual={setVistaActual}
           />
+          <span className="level" style={{marginRight: '0.5rem', background: 'var(--success)', color: 'white'}}>⚡ {jugador.energia || 100}</span>
           <span className="level">Nvl {jugador.nivel}</span>
           <span className="coins">🪙 {jugador.moneda}</span>
           <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">

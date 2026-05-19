@@ -67,6 +67,37 @@ function PersonajePanel({ jugador,setVistaActual }) {
             </div>
           </div>
 
+          <div className="personaje-vitals" style={{marginTop: '1rem', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'var(--bg-card)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)'}}>
+            <h4 style={{marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Estado Vital</h4>
+            <div className="vital-bar">
+              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.2rem'}}>
+                <span>⚡ Energía</span>
+                <span>{jugador.energia || 100}/100</span>
+              </div>
+              <div style={{height: '8px', background: 'var(--bg-dark)', borderRadius: '4px', overflow: 'hidden'}}>
+                <div style={{height: '100%', background: 'var(--success)', width: `${jugador.energia || 100}%`, transition: 'width 0.3s'}} />
+              </div>
+            </div>
+            <div className="vital-bar">
+              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.2rem'}}>
+                <span>😊 Felicidad</span>
+                <span>{jugador.felicidad || 100}/100</span>
+              </div>
+              <div style={{height: '8px', background: 'var(--bg-dark)', borderRadius: '4px', overflow: 'hidden'}}>
+                <div style={{height: '100%', background: '#F59E0B', width: `${jugador.felicidad || 100}%`, transition: 'width 0.3s'}} />
+              </div>
+            </div>
+            <div className="vital-bar">
+              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.2rem'}}>
+                <span>😴 Cansancio</span>
+                <span>{jugador.cansancio || 0}/100</span>
+              </div>
+              <div style={{height: '8px', background: 'var(--bg-dark)', borderRadius: '4px', overflow: 'hidden'}}>
+                <div style={{height: '100%', background: 'var(--primary)', width: `${jugador.cansancio || 0}%`, transition: 'width 0.3s'}} />
+              </div>
+            </div>
+          </div>
+
           <div className="equipment-section">
             <h4>⚔️ Arma Actual</h4>
             <div className="arma-card" style={{ borderColor: getRarityColor(armaActual.rarity) }}>
