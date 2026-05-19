@@ -576,8 +576,8 @@
 .edu-card {
   display: flex;
   gap: 1rem;
-  background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(16,185,129,0.2));
-  border: 2px solid var(--success);
+  background: linear-gradient(135deg, rgba(229,0,0,0.2), rgba(179,0,0,0.2));
+  border: 2px solid var(--primary);
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 1.5rem;
@@ -1633,7 +1633,7 @@
 
 .auth-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgba(229, 0, 0, 0.4);
 }
 
 .auth-btn:disabled {
@@ -1668,7 +1668,7 @@
 }
 
 .first-user-message {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
+  background: linear-gradient(135deg, rgba(229, 0, 0, 0.1), rgba(179, 0, 0, 0.1));
   border: 2px solid var(--success);
   border-radius: 12px;
   padding: 1.25rem;
@@ -1695,7 +1695,7 @@
    DASHBOARD - Tarjeta de Monedas Mejorada
    ========================================== */
 .card.monedas {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(200, 200, 200, 0.1));
   border: 2px solid var(--coin-color);
 }
 
@@ -1778,7 +1778,7 @@
   padding: 0.875rem 2rem;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--success), #059669);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
   font-weight: bold;
   font-size: 1rem;
@@ -2014,12 +2014,12 @@
 }
 
 .presupuesto-btn.necesidad {
-  background: linear-gradient(135deg, var(--success), #059669);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
 }
 
 .presupuesto-btn.deseo {
-  background: linear-gradient(135deg, var(--warning), #d97706);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: var(--bg-dark);
 }
 
@@ -2171,7 +2171,7 @@
   justify-content: center;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(180deg, #000000 0%, #111111 100%);
   border-radius: 8px;
 }
 
@@ -2447,7 +2447,7 @@
   justify-content: center;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(180deg, #000000 0%, #111111 100%);
   border-radius: 8px;
 }
 
